@@ -20,4 +20,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "WyrmEngine"
-include(":app")
+include(":app", ":filetree")

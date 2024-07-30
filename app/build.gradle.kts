@@ -54,6 +54,8 @@ dependencies {
   implementation(libs.android.tiffbitmapfactory)
   implementation(libs.obj)
 
+  implementation(project(":filetree"))
+
   testImplementation(libs.junit)
   androidTestImplementation(libs.androidx.junit)
   androidTestImplementation(libs.androidx.espresso.core)
