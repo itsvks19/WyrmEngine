@@ -11,9 +11,12 @@ import com.wyrm.engine.adapters.graphics.ObjectListAdapter
 import com.wyrm.engine.core.Core
 import com.wyrm.engine.core.objects.GameObject
 import com.wyrm.engine.databinding.ActivityEditorBinding
+import com.wyrm.engine.ext.encrypt
+import com.wyrm.engine.ext.toJson
 import com.wyrm.engine.graphics.scene.Scene
 import com.wyrm.engine.managers.SceneManager
 import com.wyrm.engine.model.MenuItem
+import java.io.File
 
 @SuppressLint("SetTextI18n")
 class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding::inflate) {
@@ -29,6 +32,15 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
         it.addGameObject(GameObject("Sphere"))
         it.addGameObject(GameObject("Plane"))
       }
+
+      val json = scene.toJson()
+      File(Constants.FILES_PATH, "scene.wscene").writeText(
+        encrypt(
+          json,
+          Constants.defaultEncryptionKey,
+          Constants.defaultEncryptionIv
+        )
+      )
 
       SceneManager.instance.addScene(scene)
     }
