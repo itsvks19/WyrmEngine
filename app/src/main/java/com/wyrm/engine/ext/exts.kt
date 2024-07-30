@@ -1,0 +1,31 @@
+@file:JvmName("Utils")
+
+package com.wyrm.engine.ext
+
+import java.text.DecimalFormat
+import java.text.NumberFormat
+import java.util.Locale
+
+fun String?.toFloat(): Float {
+  if (this == null) return 0f
+
+  try {
+    if (this.isEmpty()) return 0f
+    if (this.contains(",")) {
+      return NumberFormat.getInstance(Locale.getDefault()).parse(this)?.toFloat() ?: 0f
+    }
+    if (this.contains(".")) {
+      return NumberFormat.getInstance(Locale.US).parse(this)?.toFloat() ?: 0f
+    }
+    return NumberFormat.getInstance(Locale.ROOT).parse(this)?.toFloat() ?: 0f
+  } catch (e: Exception) {
+    e.printStackTrace()
+    return 0f
+  }
+}
+
+fun Float.toDecimals(i: Int): Float {
+  val decimalFormat = DecimalFormat()
+  decimalFormat.maximumFractionDigits = i
+  return decimalFormat.format(this).toFloat()
+}
