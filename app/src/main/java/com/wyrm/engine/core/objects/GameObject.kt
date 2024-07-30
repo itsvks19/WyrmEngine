@@ -26,11 +26,11 @@ open class GameObject(
     this.transform = transform
   }
 
-  fun onStart(context: Context, engine: Engine) {
+  internal fun onStart(context: Context, engine: Engine) {
     components.forEach { it.onStart() }
   }
 
-  fun onRepeat(context: Context, engine: Engine) {
+  internal fun onRepeat(context: Context, engine: Engine) {
     components.forEach { it.onRepeat() }
   }
 
