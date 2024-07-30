@@ -44,11 +44,7 @@ class ObjectListAdapter(
 
       name.text = items[position].name
       root.setOnClickListener {
-        val json = decrypt(
-          File(Constants.FILES_PATH, "scene.wscene").readText(),
-          Constants.defaultEncryptionKey,
-          Constants.defaultEncryptionIv
-        )
+        val json = decrypt(File(Constants.FILES_PATH, "scene.wscene").readText())
 
         ToastUtils.showShort(name.text)
 

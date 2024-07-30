@@ -41,8 +41,8 @@ fun generateIv(): IvParameterSpec {
 @JvmOverloads
 fun encrypt(
   input: String,
-  key: SecretKey,
-  iv: IvParameterSpec,
+  key: SecretKey = Constants.defaultEncryptionKey,
+  iv: IvParameterSpec = Constants.defaultEncryptionIv,
   algorithm: String = Constants.DEFAULT_ENCRYPTION_ALGORITHM,
 ): String {
   val cipher = Cipher.getInstance(algorithm)
@@ -62,8 +62,8 @@ fun encrypt(
 @JvmOverloads
 fun decrypt(
   cipherText: String,
-  key: SecretKey,
-  iv: IvParameterSpec,
+  key: SecretKey = Constants.defaultEncryptionKey,
+  iv: IvParameterSpec = Constants.defaultEncryptionIv,
   algorithm: String = Constants.DEFAULT_ENCRYPTION_ALGORITHM,
 ): String {
   val cipher = Cipher.getInstance(algorithm)

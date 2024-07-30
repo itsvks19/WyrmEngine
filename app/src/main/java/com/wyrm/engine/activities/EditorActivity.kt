@@ -11,7 +11,9 @@ import com.wyrm.engine.adapters.graphics.ObjectListAdapter
 import com.wyrm.engine.core.Core
 import com.wyrm.engine.core.objects.GameObject
 import com.wyrm.engine.databinding.ActivityEditorBinding
+import com.wyrm.engine.ext.decrypt
 import com.wyrm.engine.ext.encrypt
+import com.wyrm.engine.ext.fromJson
 import com.wyrm.engine.ext.toJson
 import com.wyrm.engine.graphics.scene.Scene
 import com.wyrm.engine.managers.SceneManager
@@ -34,13 +36,7 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
       }
 
       val json = scene.toJson()
-      File(Constants.FILES_PATH, "scene.wscene").writeText(
-        encrypt(
-          json,
-          Constants.defaultEncryptionKey,
-          Constants.defaultEncryptionIv
-        )
-      )
+      File(Constants.FILES_PATH, "scene.wscene").writeText(encrypt(json))
 
       SceneManager.instance.addScene(scene)
     }
@@ -69,7 +65,8 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
     }
 
     binding.objectList.apply {
-      val scene = SceneManager.instance.getMainScene()
+      val json = decrypt(File(Constants.FILES_PATH, "scene.wscene").readText())
+      val scene = json.fromJson<Scene>()
 
       objectsList.apply {
         layoutManager = LinearLayoutManager(
