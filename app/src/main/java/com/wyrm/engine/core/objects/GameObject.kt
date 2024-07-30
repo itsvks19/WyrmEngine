@@ -2,7 +2,9 @@ package com.wyrm.engine.core.objects
 
 import com.wyrm.engine.core.components.Component
 
-open class GameObject() {
+open class GameObject(
+  var name: String? = null
+) {
   var transform: Transform = Transform()
 
   private val components = mutableListOf<Component>()

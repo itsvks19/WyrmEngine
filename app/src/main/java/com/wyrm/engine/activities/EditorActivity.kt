@@ -7,8 +7,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.wyrm.engine.Constants
 import com.wyrm.engine.activities.base.BaseActivity
 import com.wyrm.engine.adapters.EditorTopBarMenuAdapter
+import com.wyrm.engine.adapters.graphics.ObjectListAdapter
 import com.wyrm.engine.core.Core
+import com.wyrm.engine.core.objects.GameObject
 import com.wyrm.engine.databinding.ActivityEditorBinding
+import com.wyrm.engine.graphics.scene.Scene
+import com.wyrm.engine.managers.SceneManager
 import com.wyrm.engine.model.MenuItem
 
 @SuppressLint("SetTextI18n")
@@ -18,6 +22,16 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
     super.onCreate(savedInstanceState)
     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     Core.getInstance().onStartEngine(this, this)
+
+    run {
+      val scene = Scene("Test").also {
+        it.addGameObject(GameObject("Cube"))
+        it.addGameObject(GameObject("Sphere"))
+        it.addGameObject(GameObject("Plane"))
+      }
+
+      SceneManager.instance.addScene(scene)
+    }
 
     binding.topBar.apply {
       val menu = mutableListOf(
@@ -39,6 +53,19 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
       info.apply {
         text = "v${Constants.APP_VERSION}"
         setOnClickListener { }
+      }
+    }
+
+    binding.objectList.apply {
+      val scene = SceneManager.instance.getMainScene()
+
+      objectsList.apply {
+        layoutManager = LinearLayoutManager(
+          this@EditorActivity,
+          LinearLayoutManager.VERTICAL,
+          false
+        )
+        adapter = ObjectListAdapter(scene.objects)
       }
     }
   }
