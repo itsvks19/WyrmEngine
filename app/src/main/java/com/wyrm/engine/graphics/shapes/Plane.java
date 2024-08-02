@@ -5,8 +5,8 @@ import android.opengl.GLES30;
 
 import androidx.annotation.NonNull;
 
+import com.wyrm.engine.core.components.camera.Camera;
 import com.wyrm.engine.ext.Sizes;
-import com.wyrm.engine.graphics.Camera;
 import com.wyrm.engine.graphics.Texture;
 import com.wyrm.engine.graphics.shader.Config;
 import com.wyrm.engine.graphics.shader.Shader;

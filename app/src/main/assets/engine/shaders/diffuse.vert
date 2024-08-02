@@ -1,6 +1,7 @@
 #version 300 es
-layout (location = 0) in vec4 aPos;
+layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
+layout (location = 2) in vec3 aNormal;
 
 //// FROM ENGINE
 
@@ -73,12 +74,14 @@ uniform vec3 lightPostion9;
 
 out vec4 vertexLight;
 out vec2 texCoord;
+out vec3 normal;
 
 float vectorDistance(vec3 v1, vec3 v2);
 
 void main() {
-    gl_Position = uMMatrix * uVMatrix * uPMatrix * aPos;
-    vec4 pos = uMMatrix * aPos;
+    normal = aNormal;
+    gl_Position = uMMatrix * uVMatrix * uPMatrix * vec4(aPos, 1.0);
+    vec4 pos = uMMatrix * vec4(aPos, 1.0);
     texCoord = vec2(aTexCoord.s, 1.0 - aTexCoord.t);// FLIPPING Y
 
     // LIGHT

@@ -13,6 +13,7 @@ uniform vec4 diffuseColor;
 
 in highp vec4 vertexLight;
 in vec2 texCoord;
+in vec3 normal;
 
 void main() {
     float ambientStrength = 0.7;

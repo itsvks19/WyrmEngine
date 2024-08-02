@@ -1,5 +1,6 @@
 package com.wyrm.engine.activities.base
 
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.LayoutInflater
 import androidx.activity.enableEdgeToEdge
@@ -20,6 +21,9 @@ open class BaseActivity<T : ViewBinding>(
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+    // disable screenshots
+    // window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
     enableEdgeToEdge()
     _binding = bindingInflater(layoutInflater)
     setContentView(binding.root)

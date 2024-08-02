@@ -8,13 +8,11 @@ import glm_.vec3.Vec3;
 public class Camera {
   private Mat4 viewMatrix;
 
-  private Vec3 position = new Vec3(0f, 0f, 3f);
+  private Vec3 position = new Vec3(0f, 1f, 3f);
   private Vec3 lookAt = new Vec3(0f, 0f, 0f);
   private Vec3 up = new Vec3(0f, 1f, 0f);
 
-  private Mat4 rotation = Mat4.Companion.getIdentity();
-
-  private Vec3 translation = new Vec3();
+  private Vec3 rotation = new Vec3();
 
   public Camera() {
     viewMatrix = glm.lookAt(position, lookAt, up);
@@ -22,22 +20,14 @@ public class Camera {
 
   public void updateViewMatrix() {
     viewMatrix = glm.lookAt(position, lookAt, up);
-    viewMatrix.timesAssign(rotation);
   }
 
   public Mat4 getViewMatrix() {
+    viewMatrix = Mat4.Companion.getIdentity();
+    viewMatrix = viewMatrix.rotateX(glm.radians(rotation.getX()));
+    viewMatrix = viewMatrix.rotateY(glm.radians(rotation.getY()));
+    viewMatrix = viewMatrix.translate(position.negate());
     return viewMatrix;
-  }
-
-  public void translate(float x, float y, float z) {
-    translation.setX(x);
-    translation.setY(y);
-    translation.setZ(z);
-    rotation.translateAssign(translation);
-  }
-
-  public void rotate(float angle) {
-    rotation.rotateAssign(angle, 0f, 1f, 0f);
   }
 
   public Vec3 getPosition() {
@@ -48,7 +38,18 @@ public class Camera {
     this.position = position;
   }
 
-  public Vec3 getTranslation() {
-    return translation;
+  public void rotate(float dx, float dy, float dz) {
+    rotation.setX(rotation.getX() + dx);
+    rotation.setY(rotation.getY() + dy);
+    rotation.setZ(rotation.getZ() + dz);
+    float minVerticalAngle = -85.0f;
+    float maxVerticalAngle = 85.0f;
+
+    // Clamp the vertical angle
+    if (this.rotation.getX() < minVerticalAngle) {
+      this.rotation.setX(minVerticalAngle);
+    } else if (this.rotation.getX() > maxVerticalAngle) {
+      this.rotation.setX(maxVerticalAngle);
+    }
   }
 }

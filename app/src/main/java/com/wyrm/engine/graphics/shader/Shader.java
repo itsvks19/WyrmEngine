@@ -5,6 +5,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.wyrm.engine.core.components.color.Color;
 import com.wyrm.engine.model.shader.ShaderTexture;
 
 import org.jetbrains.annotations.Contract;
@@ -174,6 +175,10 @@ public class Shader implements Serializable {
 
   public void setVec4(String name, @NonNull Vec4 vec) {
     setVec4(name, vec.getX(), vec.getY(), vec.getZ(), vec.getW());
+  }
+
+  public void setColor(String name, @NonNull Color color) {
+    setVec4(name, color.r, color.g, color.b, color.a);
   }
 
   public void addTexture(ShaderTexture texture) {

@@ -1,3 +1,11 @@
 <resources>
   <string name="app_name">WyrmEngine</string>
+  <string name="projects">Projects</string>
+  <string name="new_project">New Project</string>
+  <string name="project_name">Project name</string>
+  <string name="select_icon">Select Icon</string>
+  <string name="icon">Icon</string>
+  <string name="cancel">Cancel</string>
+  <string name="create">Create</string>
+  <string name="empty">Empty</string>
 </resources>

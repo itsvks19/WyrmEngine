@@ -1,7 +1,10 @@
 package com.wyrm.engine.activities
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.WindowManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wyrm.engine.Constants
@@ -9,11 +12,13 @@ import com.wyrm.engine.activities.base.BaseActivity
 import com.wyrm.engine.adapters.EditorTopBarMenuAdapter
 import com.wyrm.engine.adapters.graphics.ObjectListAdapter
 import com.wyrm.engine.core.Core
+import com.wyrm.engine.core.components.camera.Camera
 import com.wyrm.engine.core.objects.GameObject
 import com.wyrm.engine.databinding.ActivityEditorBinding
 import com.wyrm.engine.ext.decrypt
 import com.wyrm.engine.ext.encrypt
 import com.wyrm.engine.ext.fromJson
+import com.wyrm.engine.ext.toDecimals
 import com.wyrm.engine.ext.toJson
 import com.wyrm.engine.graphics.scene.Scene
 import com.wyrm.engine.managers.SceneManager
@@ -81,6 +86,88 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
 
   fun updateInfoText(text: String) {
     binding.topBar.info.text = text
+  }
+
+  fun updateUiOnRepeat() {
+
+  }
+
+  fun updateFov(fov: Float) {
+    binding.fov.text = "FOV: ${fov.toDecimals(1)}"
+  }
+
+  @SuppressLint("ClickableViewAccessibility")
+  fun handleButtonTouch(camera: Camera) {
+    binding.apply {
+      forward.setOnTouchListener { _, event ->
+        when (event.actionMasked) {
+          MotionEvent.ACTION_DOWN -> {
+            forward.imageTintList = ColorStateList.valueOf(Color.GREEN)
+            camera.isMovingForward = true
+            true
+          }
+
+          MotionEvent.ACTION_UP -> {
+            forward.imageTintList = ColorStateList.valueOf(Color.WHITE)
+            camera.isMovingForward = false
+            true
+          }
+
+          else -> false
+        }
+      }
+      backward.setOnTouchListener { _, event ->
+        when (event.actionMasked) {
+          MotionEvent.ACTION_DOWN -> {
+            backward.imageTintList = ColorStateList.valueOf(Color.GREEN)
+            camera.isMovingBackward = true
+            true
+          }
+
+          MotionEvent.ACTION_UP -> {
+            backward.imageTintList = ColorStateList.valueOf(Color.WHITE)
+            camera.isMovingBackward = false
+            true
+          }
+
+          else -> false
+        }
+      }
+      left.setOnTouchListener { _, event ->
+        when (event.actionMasked) {
+          MotionEvent.ACTION_DOWN -> {
+            left.imageTintList = ColorStateList.valueOf(Color.GREEN)
+            camera.isMovingLeft = true
+            true
+          }
+
+          MotionEvent.ACTION_UP -> {
+            left.imageTintList = ColorStateList.valueOf(Color.WHITE)
+            camera.isMovingLeft = false
+            true
+          }
+
+          else -> false
+        }
+      }
+      right.setOnTouchListener { _, event ->
+        when (event.actionMasked) {
+          MotionEvent.ACTION_DOWN -> {
+            right.imageTintList = ColorStateList.valueOf(Color.GREEN)
+            camera.isMovingRight = true
+            true
+          }
+
+          MotionEvent.ACTION_UP -> {
+            right.imageTintList = ColorStateList.valueOf(Color.WHITE)
+            camera.isMovingRight = false
+            true
+          }
+
+          else -> false
+        }
+      }
+    }
   }
 
   override fun onDestroy() {

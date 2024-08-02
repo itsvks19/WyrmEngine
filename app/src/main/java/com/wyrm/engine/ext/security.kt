@@ -16,6 +16,9 @@ import javax.crypto.NoSuchPaddingException
 import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 
+/**
+ * @param n must be 128, 192 or 256
+ */
 @Throws(NoSuchAlgorithmException::class)
 fun generateKey(n: Int): SecretKey {
   val keyGenerator = KeyGenerator.getInstance("AES")

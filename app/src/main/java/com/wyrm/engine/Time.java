@@ -2,17 +2,24 @@ package com.wyrm.engine;
 
 public class Time {
   public static float deltaTime;
-  private float dt = 0f;
-  private long startTime = System.nanoTime();
+  private static float lastTime;
 
-  public void addFrame() {
-    dt = (float) System.nanoTime() - startTime;
-    startTime = System.nanoTime();
-    dt /= 1.0E9f;
-    deltaTime = getDeltaTime();
+  static {
+    deltaTime = 0;
+    lastTime = (float) System.nanoTime();
   }
 
-  public float getDeltaTime() {
-    return dt;
+  public void addFrame() {
+    float currentTime = System.nanoTime();
+    deltaTime = (currentTime - lastTime) / 1_000_000_000f;
+    lastTime = currentTime;
+  }
+
+  public static float systemTimeInSeconds() {
+    return System.nanoTime() / 1_000_000_000f;
+  }
+
+  public static float getDeltaTime() {
+    return deltaTime;
   }
 }

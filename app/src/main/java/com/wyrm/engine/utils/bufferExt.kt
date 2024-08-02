@@ -16,3 +16,5 @@ fun FloatArray.toFloatBuffer(): FloatBuffer =
       position(0)
     }
   }
+
+fun FloatBuffer.toFloatArray() = FloatArray(remaining(), ::get)

@@ -8,6 +8,12 @@ class SceneManager {
     val instance by lazy { SceneManager() }
   }
 
+  private var currentScene: Scene? = null
+
+  fun loadScene(scene: Scene) {
+    currentScene = scene
+  }
+
   private val scenes = mutableListOf<Scene>()
 
   fun getMainScene(): Scene {

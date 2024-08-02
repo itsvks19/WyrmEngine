@@ -11,13 +11,11 @@ import com.wyrm.engine.Time;
 import com.wyrm.engine.activities.EditorActivity;
 import com.wyrm.engine.core.components.console.Console;
 import com.wyrm.engine.core.components.input.Input;
+import com.wyrm.engine.core.components.mesh.MeshRenderer;
 import com.wyrm.engine.core.memory.Profiler;
 import com.wyrm.engine.core.renderer.WyrmRenderer;
 import com.wyrm.engine.core.renderer.WyrmSurface;
 import com.wyrm.engine.ext.ThreadingKt;
-import com.wyrm.engine.ext.Utils;
-import com.wyrm.engine.graphics.Camera;
-import com.wyrm.engine.graphics.shapes.Plane;
 
 public class Core {
   @SuppressLint("StaticFieldLeak")
@@ -26,9 +24,6 @@ public class Core {
   private Context context;
   private Context editorContext;
   private EditorActivity editorActivity;
-  private Camera camera;
-
-  private Plane plane = new Plane();
 
   public Input input = new Input();
   public Time time = new Time();
@@ -37,7 +32,7 @@ public class Core {
   public boolean isStarted = false;
   public boolean isGlContextCreated = false;
 
-  private boolean runFirstTimeOnRepeat = true;
+  private MeshRenderer meshRenderer;
 
   public static Core getInstance() {
     if (instance == null) {
@@ -56,6 +51,8 @@ public class Core {
     this.editorActivity = activity;
     input.init(context);
 
+    meshRenderer = new MeshRenderer();
+
     isStarted = true;
   }
 
@@ -67,39 +64,48 @@ public class Core {
   }
 
   public void onSurfaceCreated(WyrmRenderer renderer, Context surfaceContext) {
-    camera = new Camera();
-    plane.setup(context);
-
     isGlContextCreated = true;
+    meshRenderer.onStart();
   }
 
   public void repeatEveryFrame(Context surfaceContext, int width, int height) {
+    time.addFrame();
     input.preFrame();
-
-    if (input.getTouch(1).isDown()) {
-      ToastUtils.showShort("down");
-      console.log("down");
-    }
-
+    meshRenderer.onRepeat();
     input.posFrame();
     Profiler.update();
-    time.addFrame();
 
     ThreadingKt.runOnUiThread(() -> {
-      editorActivity.updateInfoText(
-        "FPS: " + Utils.toDecimals(Profiler.frameRate, 2)
-      );
-
+      if (editorActivity != null) {
+        editorActivity.updateFov(meshRenderer.getCamera().getZoom());
+        editorActivity.updateUiOnRepeat();
+      }
       return null;
     });
   }
 
   public void onTouchEvent(@NonNull MotionEvent event, WyrmSurface surface) {
+    editorActivity.handleButtonTouch(meshRenderer.getCamera());
     input.onTouchEvent(event, surface);
   }
 
+  public void onScroll(float distanceX, float distanceY, int width, int height) {
+    float rotationX = distanceX / width;
+    float rotationY = distanceY / height;
+
+    console.log("rotationX: " + rotationX);
+    console.log("rotationY: " + rotationY);
+
+    meshRenderer.getCamera().processTouchMovement(-rotationX, rotationY);
+  }
+
+  public void onScale(float scaleFactor) {
+    console.log("scaleFactor: " + scaleFactor);
+    meshRenderer.getCamera().processZoom(scaleFactor);
+  }
+
   public void onSurfaceChanged(Context surfaceContext, int width, int height) {
-    ToastUtils.showShort(width + "x" + height);
+    meshRenderer.onChanged();
   }
 
   public Context getContext() {
