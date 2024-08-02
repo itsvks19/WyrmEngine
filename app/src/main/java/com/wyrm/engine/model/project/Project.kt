@@ -10,5 +10,5 @@ data class Project(
   val name by lazy { file.name }
   val path by lazy { file.absolutePath }
   val engineVersion by lazy { Constants.APP_VERSION }
-  val icon by lazy { Icon(File("$path/icon.image")) }
+  val icon by lazy { Icon(File("$path/.settings/icon.image")) }
 }

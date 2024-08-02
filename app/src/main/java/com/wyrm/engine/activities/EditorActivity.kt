@@ -21,16 +21,22 @@ import com.wyrm.engine.ext.fromJson
 import com.wyrm.engine.ext.toDecimals
 import com.wyrm.engine.ext.toJson
 import com.wyrm.engine.graphics.scene.Scene
+import com.wyrm.engine.managers.ProjectManager
 import com.wyrm.engine.managers.SceneManager
 import com.wyrm.engine.model.MenuItem
+import com.wyrm.engine.model.project.Project
 import java.io.File
 
 @SuppressLint("SetTextI18n")
 class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding::inflate) {
 
+  private lateinit var project: Project
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+    project = requireNotNull(ProjectManager.instance.openedProject) { "No opened project" }
+
     Core.getInstance().onStartEngine(this, this)
 
     run {
@@ -53,6 +59,7 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
         MenuItem("View"),
         MenuItem("Code"),
         MenuItem("Build"),
+        MenuItem("Help"),
       )
       dropdownMenu.apply {
         layoutManager = LinearLayoutManager(
@@ -172,6 +179,7 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
 
   override fun onDestroy() {
     super.onDestroy()
+    ProjectManager.instance.closeProject()
     Core.getInstance().destroy()
   }
 }

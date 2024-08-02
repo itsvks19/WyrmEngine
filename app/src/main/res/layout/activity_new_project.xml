@@ -50,21 +50,28 @@
     android:text="@string/select_icon"
     app:chipIcon="@drawable/add_photo_alternate"
     app:ensureMinTouchTargetSize="true"
-    app:layout_constraintBottom_toBottomOf="@id/icon"
-    app:layout_constraintStart_toEndOf="@id/icon"
-    app:layout_constraintTop_toTopOf="@id/icon" />
+    app:layout_constraintBottom_toBottomOf="@id/icon_container"
+    app:layout_constraintStart_toEndOf="@id/icon_container"
+    app:layout_constraintTop_toTopOf="@id/icon_container" />
 
-  <com.google.android.material.imageview.ShapeableImageView
-    android:id="@+id/icon"
+  <com.google.android.material.card.MaterialCardView
+    android:id="@+id/icon_container"
     android:layout_width="80dp"
     android:layout_height="80dp"
     android:layout_marginStart="5dp"
     android:layout_marginTop="5dp"
-    android:scaleType="centerCrop"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/name_layout"
-    app:shapeAppearance="?shapeAppearanceCornerSmall"
-    app:srcCompat="@drawable/keyboard_w_outline" />
+    app:layout_constraintTop_toBottomOf="@id/name_layout">
+
+    <com.google.android.material.imageview.ShapeableImageView
+      android:id="@+id/icon"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:padding="5dp"
+      android:scaleType="centerCrop"
+      app:shapeAppearance="?shapeAppearanceCornerSmall"
+      app:srcCompat="@drawable/ic_launcher_background" />
+  </com.google.android.material.card.MaterialCardView>
 
   <TextView
     android:id="@+id/icon_name"
@@ -73,9 +80,9 @@
     android:text="@string/icon"
     android:textAppearance="?textAppearanceLabelSmall"
     android:textColor="?colorOnSurfaceVariant"
-    app:layout_constraintEnd_toEndOf="@id/icon"
-    app:layout_constraintStart_toStartOf="@id/icon"
-    app:layout_constraintTop_toBottomOf="@id/icon" />
+    app:layout_constraintEnd_toEndOf="@id/icon_container"
+    app:layout_constraintStart_toStartOf="@id/icon_container"
+    app:layout_constraintTop_toBottomOf="@id/icon_container" />
 
   <Button
     android:id="@+id/cancel"

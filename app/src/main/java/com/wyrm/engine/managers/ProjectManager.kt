@@ -1,6 +1,7 @@
 package com.wyrm.engine.managers
 
 import com.wyrm.engine.Constants
+import com.wyrm.engine.model.project.Project
 import java.io.File
 
 class ProjectManager {
@@ -9,24 +10,16 @@ class ProjectManager {
     val instance by lazy { ProjectManager() }
   }
 
-  var loadedProjectName = ""
-    private set
+  var openedProject: Project? = null
 
-  val loadedProjectLocation: String
-    get() {
-      return if (loadedProjectName == Constants.COMPILED_MARKER) {
-        "${Constants.ASSET_MARKER}/compiled"
-      } else {
-        "${Constants.PROJECTS_PATH}/$loadedProjectName"
-      }
-    }
-
-  val projects: List<File>
-    get() = File(Constants.PROJECTS_PATH).listFiles()
-      ?.filter { it.isDirectory }
-      ?: listOf()
-
-  fun loadProject(projectName: String) {
-    loadedProjectName = projectName
+  fun openProject(project: Project) {
+    openedProject = project
   }
+
+  fun closeProject() {
+    openedProject = null
+  }
+
+  val projects: List<Project>
+    get() = File(Constants.PROJECTS_PATH).listFiles()?.map { Project(it) } ?: listOf()
 }
