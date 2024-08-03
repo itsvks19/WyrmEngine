@@ -1,5 +1,5 @@
 [versions]
-agp = "8.6.0-alpha07"
+agp = "8.5.1"
 androidTiffbitmapfactory = "0.9.9.1"
 commonsText = "1.12.0"
 dexter = "6.2.3"

@@ -61,13 +61,17 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
         MenuItem("Build"),
         MenuItem("Help"),
       )
+
+
+
+
       dropdownMenu.apply {
         layoutManager = LinearLayoutManager(
           this@EditorActivity,
           LinearLayoutManager.HORIZONTAL,
           false
         )
-        adapter = EditorTopBarMenuAdapter(menu)
+        adapter = EditorTopBarMenuAdapter(menu,this@EditorActivity)
       }
 
       info.apply {
