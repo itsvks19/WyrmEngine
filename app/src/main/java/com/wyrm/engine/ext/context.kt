@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import androidx.annotation.AttrRes
 import androidx.core.app.ActivityOptionsCompat
+import com.google.android.material.color.MaterialColors
 import com.wyrm.engine.core.Core
 import java.io.IOException
 
@@ -40,6 +42,8 @@ fun Context.bitmapFromAsset(path: String) = try {
   err.printStackTrace()
   null
 }
+
+fun Context.getThemeColor(@AttrRes attr: Int) = MaterialColors.getColor(this, attr, 0)
 
 fun getCoreContext(): Context = Core.getInstance().context
 

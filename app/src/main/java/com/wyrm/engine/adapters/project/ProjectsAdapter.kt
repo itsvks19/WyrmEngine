@@ -4,13 +4,14 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
 import com.wyrm.engine.activities.EditorActivity
 import com.wyrm.engine.databinding.LayoutProjectItemBinding
 import com.wyrm.engine.ext.open
 import com.wyrm.engine.ext.setIcon
+import com.wyrm.engine.ext.toast
 import com.wyrm.engine.managers.ProjectManager
 import com.wyrm.engine.model.project.Project
+import com.wyrm.engine.ui.popupmenu.WyrmPopupMenu
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -46,7 +47,27 @@ class ProjectsAdapter(
       name.isSelected = true
       version.text = "v${project.engineVersion}"
 
-      menu.setOnClickListener { ToastUtils.showShort("Menu") }
+      menu.setOnClickListener { view ->
+        val popupMenu = WyrmPopupMenu(view).apply {
+          addMenuItem("Rename") {
+            // TODO: Rename project
+            view.context.toast("Rename project")
+          }
+          addMenuItem("Delete", WyrmPopupMenu(view).apply {
+            addMenuItem("Submenu test") {
+              view.context.toast("Submenu clicked")
+            }
+          }) {
+            // TODO: Delete project
+            view.context.toast("Delete project")
+          }
+          addMenuItem("Open in editor") {
+            ProjectManager.instance.openProject(project)
+            view.context.open(EditorActivity::class.java)
+          }
+        }
+        popupMenu.show()
+      }
 
       root.setOnClickListener {
         ProjectManager.instance.openProject(project)
@@ -55,6 +76,7 @@ class ProjectsAdapter(
     }
   }
 
+  // Called from NewProjectActivity
   @Subscribe(threadMode = ThreadMode.MAIN)
   fun onCreateNewProject(project: Project) {
     projects.add(project)
