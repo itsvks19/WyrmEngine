@@ -1,5 +1,6 @@
 package com.wyrm.engine.managers
 
+import com.blankj.utilcode.util.FileUtils
 import com.wyrm.engine.Constants
 import com.wyrm.engine.model.project.Project
 import java.io.File
@@ -18,6 +19,10 @@ class ProjectManager {
 
   fun closeProject() {
     openedProject = null
+  }
+
+  fun deleteProject(project: Project): Boolean {
+    return FileUtils.delete(project.file)
   }
 
   val projects: List<Project>

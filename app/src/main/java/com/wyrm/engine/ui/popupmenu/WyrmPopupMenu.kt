@@ -41,7 +41,7 @@ data class WyrmPopupMenu @JvmOverloads constructor(
     binding.apply {
       root.background = GradientDrawable().apply {
         shape = GradientDrawable.RECTANGLE
-        cornerRadius = 5f.dp.toFloat()
+        cornerRadius = 8f.dp.toFloat()
         setColor(context.getThemeColor(attr.colorSurface))
         setStroke(1, context.getThemeColor(attr.colorOutline))
       }

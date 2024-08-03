@@ -18,8 +18,10 @@ import com.wyrm.engine.Constants
 import com.wyrm.engine.activities.EditorActivity
 import com.wyrm.engine.activities.base.BaseActivity
 import com.wyrm.engine.databinding.ActivityNewProjectBinding
+import com.wyrm.engine.ext.encrypt
 import com.wyrm.engine.ext.getBitmapFromAssets
 import com.wyrm.engine.ext.open
+import com.wyrm.engine.ext.toJson
 import com.wyrm.engine.ext.toast
 import com.wyrm.engine.managers.ProjectManager
 import com.wyrm.engine.model.project.Project
@@ -124,6 +126,7 @@ class NewProjectActivity : BaseActivity<ActivityNewProjectBinding>(
         toast("Project created successfully")
 
         val project = Project(prFile)
+        File(prFile, ".wproject").writeText(project.toJson())
         EventBus.getDefault().post(project)
         ProjectManager.instance.openProject(project).also { open(EditorActivity::class.java) }
         finish()

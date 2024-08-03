@@ -12,6 +12,6 @@ data class Icon(
     private const val serialVersionUID = 1L
   }
 
-  val path by lazy { file.absolutePath }
-  val isExists by lazy { file.exists() }
+  val path: String get() = file.absolutePath
+  val isExists get() = file.exists()
 }
