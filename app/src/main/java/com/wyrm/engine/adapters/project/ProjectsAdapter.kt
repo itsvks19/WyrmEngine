@@ -90,10 +90,11 @@ class ProjectsAdapter(
           setText(oldName)
           doAfterTextChanged {
             val newText = it.toString()
+
             nameLayout.error = if (it.isNullOrEmpty()) {
               "Project name cannot be empty"
             } else if (newText != oldName && projects.any { p -> p.name == newText }) {
-              "Project with name $text already exists"
+              "Project with name $newText already exists"
             } else null
 
             setButtonEnabled(
