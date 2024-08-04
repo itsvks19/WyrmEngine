@@ -57,10 +57,13 @@ public class Core {
   }
 
   public void destroy() {
-    context = null;
     editorContext = null;
     editorActivity = null;
     instance = null;
+  }
+
+  public void destroyCore() {
+    context = null;
   }
 
   public void onSurfaceCreated(WyrmRenderer renderer, Context surfaceContext) {

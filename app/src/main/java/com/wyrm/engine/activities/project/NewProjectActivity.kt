@@ -18,13 +18,10 @@ import com.wyrm.engine.Constants
 import com.wyrm.engine.activities.EditorActivity
 import com.wyrm.engine.activities.base.BaseActivity
 import com.wyrm.engine.databinding.ActivityNewProjectBinding
-import com.wyrm.engine.ext.encrypt
 import com.wyrm.engine.ext.getBitmapFromAssets
 import com.wyrm.engine.ext.open
-import com.wyrm.engine.ext.toJson
 import com.wyrm.engine.ext.toast
 import com.wyrm.engine.managers.ProjectManager
-import com.wyrm.engine.model.project.Project
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -92,43 +89,15 @@ class NewProjectActivity : BaseActivity<ActivityNewProjectBinding>(
       }
 
       create.setOnClickListener {
-        val prFile = File("${Constants.PROJECTS_PATH}/${name.text}")
-        FileUtils.createOrExistsDir(prFile)
-        FileUtils.createOrExistsDir("${prFile.absolutePath}/Scenes")
-        FileUtils.createOrExistsDir("${prFile.absolutePath}/Assets")
-        FileUtils.createOrExistsDir("${prFile.absolutePath}/Shaders")
-        FileUtils.createOrExistsDir("${prFile.absolutePath}/Textures")
-        FileUtils.createOrExistsDir("${prFile.absolutePath}/Audio")
-        FileUtils.createOrExistsDir("${prFile.absolutePath}/Models")
-        FileUtils.createOrExistsDir("${prFile.absolutePath}/Materials")
-        FileUtils.createOrExistsDir("${prFile.absolutePath}/Animations")
-        FileUtils.createOrExistsDir("${prFile.absolutePath}/Scripts")
-        FileUtils.createOrExistsDir("${prFile.absolutePath}/Plugins")
-
-        val iconFile = File("${prFile.absolutePath}/.settings/icon.image")
-        FileUtils.createOrExistsDir(iconFile.parentFile)
-        FileUtils.createOrExistsFile(iconFile)
-
-        pickedImageUri?.let { uri ->
-          contentResolver.openInputStream(uri)?.use { inputStream ->
-            iconFile.outputStream().use { outputStream ->
-              inputStream.copyTo(outputStream)
-            }
-          }
-        } ?: assets.open("project/default_icon.jpg").use { inputStream ->
-          BitmapFactory.decodeStream(inputStream).compress(
-            Bitmap.CompressFormat.JPEG,
-            100,
-            iconFile.outputStream()
-          )
-        }
-
-        toast("Project created successfully")
-
-        val project = Project(prFile)
-        File(prFile, ".wproject").writeText(project.toJson())
+        val project = ProjectManager.createProject(
+          name.text.toString(),
+          pickedImageUri?.let {
+            contentResolver.openInputStream(it)
+          } ?: assets.open("project/default_icon.jpg")
+        )
         EventBus.getDefault().post(project)
         ProjectManager.instance.openProject(project).also { open(EditorActivity::class.java) }
+        toast("Project created successfully")
         finish()
       }
     }
