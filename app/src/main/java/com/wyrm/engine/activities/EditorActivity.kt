@@ -29,6 +29,8 @@ import com.wyrm.engine.managers.ProjectManager
 import com.wyrm.engine.managers.SceneManager
 import com.wyrm.engine.model.MenuItem
 import com.wyrm.engine.model.project.Project
+import com.wyrm.engine.ui.colorpicker.ColorPicker
+import com.wyrm.engine.ui.popupmenu.WyrmPopupMenu
 import java.io.File
 import kotlin.reflect.KMutableProperty0
 
@@ -57,11 +59,33 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
       SceneManager.instance.addScene(scene)
     }
 
+    val json = decrypt(File(Constants.FILES_PATH, "scene.wscene").readText())
+    val scene = json.fromJson<Scene>()
+
     binding.topBar.apply {
       val menu = mutableListOf(
         MenuItem("File") { toast("File") },
         MenuItem("Edit") { toast("Edit") },
         MenuItem("View") { toast("View") },
+        MenuItem("Scene") {
+          WyrmPopupMenu(it).apply {
+            addMenuItem("Light Settings", WyrmPopupMenu(it).apply {
+              addMenuItem("Space color") {
+                ColorPicker(
+                  this@EditorActivity,
+                  SceneManager.instance.mainScene.lightSettings.spaceColor
+                ).apply {
+                  onColorPicked = {
+                    SceneManager.instance.mainScene.lightSettings.spaceColor = it
+                  }
+                  show()
+                }
+              }
+              addMenuItem("Ambient color") { toast("color") }
+            })
+            show()
+          }
+        },
         MenuItem("Code") { open(CodeActivity::class.java) },
         MenuItem("Build") { toast("Build") },
         MenuItem("Help") { toast("Help") },
@@ -83,9 +107,6 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
     }
 
     binding.objectList.apply {
-      val json = decrypt(File(Constants.FILES_PATH, "scene.wscene").readText())
-      val scene = json.fromJson<Scene>()
-
       objectsList.apply {
         layoutManager = LinearLayoutManager(
           this@EditorActivity,

@@ -2,6 +2,7 @@
 
 package com.wyrm.engine.ext
 
+import androidx.annotation.ColorInt
 import java.text.DecimalFormat
 import java.text.NumberFormat
 import java.util.Locale
@@ -28,4 +29,8 @@ fun Float.toDecimals(i: Int): Float {
   val decimalFormat = DecimalFormat()
   decimalFormat.maximumFractionDigits = i
   return decimalFormat.format(this).toFloat()
+}
+
+fun @receiver:ColorInt Int.colorToHexString(): String {
+  return String.format("#%08X", this)
 }

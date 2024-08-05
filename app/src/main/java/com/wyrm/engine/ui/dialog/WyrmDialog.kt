@@ -38,10 +38,14 @@ class WyrmDialog(
     }
 
     dialog = builder.create()
-    dialog.window?.setLayout(
+    setLayout(
       350.dp.toInt(),
       WindowManager.LayoutParams.WRAP_CONTENT
     )
+  }
+
+  fun setLayout(width: Int, height: Int) {
+    dialog.window?.setLayout(width, height)
   }
 
   fun setView(view: View?): WyrmDialog {

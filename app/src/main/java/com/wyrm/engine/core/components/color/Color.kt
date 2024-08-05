@@ -1,5 +1,7 @@
 package com.wyrm.engine.core.components.color
 
+import androidx.annotation.ColorInt
+
 class Color(
   @JvmField
   var r: Float,
@@ -59,5 +61,23 @@ class Color(
 
     @JvmField
     val EARTH_BROWN = Color(0.54f, 0.27f, 0.07f, 1f) // Earth/soil color
+
+    @JvmStatic
+    fun fromColorInt(@ColorInt color: Int): Color {
+      return Color(
+        ((color shr 16) and 0xFF) / 255f,
+        ((color shr 8) and 0xFF) / 255f,
+        (color and 0xFF) / 255f,
+        ((color shr 24) and 0xFF) / 255f
+      )
+    }
+  }
+
+  @ColorInt
+  fun toColorInt(): Int {
+    return ((a * 255).toInt() shl 24) or
+        ((r * 255).toInt() shl 16) or
+        ((g * 255).toInt() shl 8) or
+        (b * 255).toInt()
   }
 }

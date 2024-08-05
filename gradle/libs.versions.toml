@@ -1,6 +1,7 @@
 [versions]
 agp = "8.5.1"
 androidTiffbitmapfactory = "0.9.9.1"
+colorpicker = "1.1.0"
 commonsText = "1.12.0"
 dexter = "6.2.3"
 eventbus = "3.3.1"
@@ -28,6 +29,7 @@ android-tiffbitmapfactory = { module = "io.github.beyka:Android-TiffBitmapFactor
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-preference-ktx = { module = "androidx.preference:preference-ktx", version.ref = "preferenceKtx" }
 androidx-recyclerview = { module = "androidx.recyclerview:recyclerview", version.ref = "recyclerview" }
+colorpicker = { module = "com.jaredrummler:colorpicker", version.ref = "colorpicker" }
 commons-text = { module = "org.apache.commons:commons-text", version.ref = "commonsText" }
 dexter = { module = "com.karumi:dexter", version.ref = "dexter" }
 eventbus = { module = "org.greenrobot:eventbus", version.ref = "eventbus" }

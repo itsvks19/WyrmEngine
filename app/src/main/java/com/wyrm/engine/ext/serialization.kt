@@ -12,3 +12,7 @@ fun <T : Serializable> T.toJson(): String {
 inline fun <reified T : Serializable> String.fromJson(): T {
   return Gson().fromJson(this, T::class.java)
 }
+
+fun <T : Serializable> String.fromJson(clazz: Class<T>): T {
+  return Gson().fromJson(this, clazz)
+}

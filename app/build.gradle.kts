@@ -53,6 +53,7 @@ dependencies {
   implementation(libs.glm)
   implementation(libs.android.tiffbitmapfactory)
   implementation(libs.obj)
+  implementation(libs.colorpicker)
 
   implementation(project(":filetree"))
 

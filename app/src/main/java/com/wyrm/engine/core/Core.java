@@ -2,6 +2,7 @@ package com.wyrm.engine.core;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.opengl.GLES30;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.wyrm.engine.core.memory.Profiler;
 import com.wyrm.engine.core.renderer.WyrmRenderer;
 import com.wyrm.engine.core.renderer.WyrmSurface;
 import com.wyrm.engine.ext.ThreadingKt;
+import com.wyrm.engine.managers.SceneManager;
 
 public class Core {
   @SuppressLint("StaticFieldLeak")
@@ -76,6 +78,8 @@ public class Core {
     inputManager.preFrame();
 
     meshRenderer.onRepeat();
+    var color = SceneManager.getInstance().getMainScene().getLightSettings().getSpaceColor();
+    GLES30.glClearColor(color.r, color.g, color.b, color.a);
 
     ThreadingKt.runOnUiThread(() -> {
       if (editorActivity != null) {
@@ -93,9 +97,6 @@ public class Core {
   public void onScroll(float distanceX, float distanceY, int width, int height) {
     float rotationX = distanceX / width;
     float rotationY = distanceY / height;
-
-    console.log("rotationX: " + rotationX);
-    console.log("rotationY: " + rotationY);
 
     meshRenderer.getCamera().processTouchMovement(-rotationX, rotationY);
   }
