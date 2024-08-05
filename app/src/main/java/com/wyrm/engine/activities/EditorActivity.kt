@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Gravity
 import android.view.MotionEvent
 import android.view.WindowManager
 import android.widget.ImageView
@@ -29,8 +30,8 @@ import com.wyrm.engine.managers.ProjectManager
 import com.wyrm.engine.managers.SceneManager
 import com.wyrm.engine.model.MenuItem
 import com.wyrm.engine.model.project.Project
-import com.wyrm.engine.ui.colorpicker.ColorPicker
 import com.wyrm.engine.ui.popupmenu.WyrmPopupMenu
+import com.wyrm.engine.ui.popupwindow.color.ColorPickerWindow
 import java.io.File
 import kotlin.reflect.KMutableProperty0
 
@@ -70,16 +71,13 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
         MenuItem("Scene") {
           WyrmPopupMenu(it).apply {
             addMenuItem("Light Settings", WyrmPopupMenu(it).apply {
-              addMenuItem("Space color") {
-                ColorPicker(
+              addMenuItem("Space color") { _ ->
+                ColorPickerWindow(
                   this@EditorActivity,
                   SceneManager.instance.mainScene.lightSettings.spaceColor
-                ).apply {
-                  onColorPicked = {
-                    SceneManager.instance.mainScene.lightSettings.spaceColor = it
-                  }
-                  show()
-                }
+                ) { c ->
+                  SceneManager.instance.mainScene.lightSettings.spaceColor = c
+                }.showAtLocation(it, Gravity.CENTER)
               }
               addMenuItem("Ambient color") { toast("color") }
             })

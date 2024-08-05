@@ -71,6 +71,12 @@ class Color(
         ((color shr 24) and 0xFF) / 255f
       )
     }
+
+    @JvmStatic
+    fun fromHexString(color: String): Color {
+      val c = android.graphics.Color.parseColor(color)
+      return fromColorInt(c)
+    }
   }
 
   @ColorInt

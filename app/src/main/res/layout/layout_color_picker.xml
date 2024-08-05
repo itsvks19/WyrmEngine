@@ -7,8 +7,11 @@
 
   <com.jaredrummler.android.colorpicker.ColorPickerView
     android:id="@+id/color_picker_view"
-    android:layout_width="200dp"
-    android:layout_height="200dp"
+    android:layout_width="250dp"
+    android:layout_height="250dp"
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="5dp"
+    android:layout_marginBottom="5dp"
     android:contentDescription="@string/app_name"
     app:cpv_alphaChannelVisible="true"
     app:cpv_borderColor="?colorOnSurface"
@@ -19,8 +22,8 @@
 
   <com.jaredrummler.android.colorpicker.ColorPanelView
     android:id="@+id/old_color"
-    android:layout_width="80dp"
-    android:layout_height="60dp"
+    android:layout_width="50dp"
+    android:layout_height="40dp"
     android:layout_marginStart="10dp"
     android:layout_marginTop="20dp"
     app:cpv_borderColor="?colorOnSurface"
@@ -31,8 +34,8 @@
 
   <com.jaredrummler.android.colorpicker.ColorPanelView
     android:id="@+id/new_color"
-    android:layout_width="80dp"
-    android:layout_height="60dp"
+    android:layout_width="50dp"
+    android:layout_height="40dp"
     android:layout_marginStart="10dp"
     android:layout_marginTop="20dp"
     android:layout_marginEnd="10dp"
@@ -46,6 +49,7 @@
     android:id="@+id/arrow"
     android:layout_width="24dp"
     android:layout_height="24dp"
+    android:layout_margin="5dp"
     android:contentDescription="arrow"
     android:src="@drawable/arrow_right_alt"
     android:tintMode="src_in"
@@ -59,7 +63,7 @@
   <include
     android:id="@+id/text_layout"
     layout="@layout/layout_text_input"
-    android:layout_width="0dp"
+    android:layout_width="200dp"
     android:layout_height="wrap_content"
     android:layout_marginStart="5dp"
     android:layout_marginEnd="5dp"
