@@ -56,6 +56,6 @@ public class WyrmApplication extends Application {
   @Override
   public void onTerminate() {
     super.onTerminate();
-    Core.getInstance().destroy();
+    Core.getInstance().destroyCore();
   }
 }
