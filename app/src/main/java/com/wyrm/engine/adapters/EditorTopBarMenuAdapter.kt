@@ -1,12 +1,9 @@
 package com.wyrm.engine.adapters
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
-import com.wyrm.engine.activities.CodeActivity
 import com.wyrm.engine.databinding.LayoutTopBarMenuItemBinding
 import com.wyrm.engine.model.MenuItem
 
@@ -31,15 +28,7 @@ class EditorTopBarMenuAdapter @JvmOverloads constructor(
   override fun onBindViewHolder(holder: VH, position: Int) {
     holder.binding.apply {
       title.text = items[position].title
-      root.setOnClickListener {
-        //since theres no id to compare against
-        when(title.text){
-          "Code" -> {
-            context.startActivity(Intent(context, CodeActivity::class.java))
-          }
-          else -> {ToastUtils.showShort(title.text)}
-        }
-      }
+      root.setOnClickListener { items[position].onClick(it) }
     }
   }
 }

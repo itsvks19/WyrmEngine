@@ -20,8 +20,10 @@ import com.wyrm.engine.databinding.ActivityEditorBinding
 import com.wyrm.engine.ext.decrypt
 import com.wyrm.engine.ext.encrypt
 import com.wyrm.engine.ext.fromJson
+import com.wyrm.engine.ext.open
 import com.wyrm.engine.ext.toDecimals
 import com.wyrm.engine.ext.toJson
+import com.wyrm.engine.ext.toast
 import com.wyrm.engine.graphics.scene.Scene
 import com.wyrm.engine.managers.ProjectManager
 import com.wyrm.engine.managers.SceneManager
@@ -57,12 +59,24 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
 
     binding.topBar.apply {
       val menu = mutableListOf(
-        MenuItem("File"),
-        MenuItem("Edit"),
-        MenuItem("View"),
-        MenuItem("Code"),
-        MenuItem("Build"),
-        MenuItem("Help"),
+        MenuItem("File") {
+          toast("File")
+        },
+        MenuItem("Edit") {
+          toast("Edit")
+        },
+        MenuItem("View") {
+          toast("View")
+        },
+        MenuItem("Code") {
+          open(CodeActivity::class.java)
+        },
+        MenuItem("Build") {
+          toast("Build")
+        },
+        MenuItem("Help") {
+          toast("Help")
+        },
       )
 
       dropdownMenu.apply {
