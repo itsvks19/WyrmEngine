@@ -10,7 +10,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.wyrm.engine.Time;
 import com.wyrm.engine.activities.EditorActivity;
 import com.wyrm.engine.core.components.console.Console;
-import com.wyrm.engine.core.components.input.Input;
+import com.wyrm.engine.core.components.input.InputManager;
 import com.wyrm.engine.core.components.mesh.MeshRenderer;
 import com.wyrm.engine.core.memory.Profiler;
 import com.wyrm.engine.core.renderer.WyrmRenderer;
@@ -25,8 +25,7 @@ public class Core {
   private Context editorContext;
   private EditorActivity editorActivity;
 
-  public Input input = new Input();
-  public Time time = new Time();
+  public InputManager inputManager = new InputManager();
   public Console console = new Console();
 
   public boolean isStarted = false;
@@ -49,7 +48,7 @@ public class Core {
   public void onStartEngine(Context context, EditorActivity activity) {
     this.editorContext = context;
     this.editorActivity = activity;
-    input.init(context);
+    inputManager.init(context);
 
     meshRenderer = new MeshRenderer();
 
@@ -59,7 +58,6 @@ public class Core {
   public void destroy() {
     editorContext = null;
     editorActivity = null;
-    instance = null;
   }
 
   public void destroyCore() {
@@ -69,14 +67,15 @@ public class Core {
   public void onSurfaceCreated(WyrmRenderer renderer, Context surfaceContext) {
     isGlContextCreated = true;
     meshRenderer.onStart();
+    editorActivity.handleButtonTouch(meshRenderer.getCamera());
   }
 
   public void repeatEveryFrame(Context surfaceContext, int width, int height) {
-    time.addFrame();
-    input.preFrame();
-    meshRenderer.onRepeat();
-    input.posFrame();
+    Time.addFrame();
     Profiler.update();
+    inputManager.preFrame();
+
+    meshRenderer.onRepeat();
 
     ThreadingKt.runOnUiThread(() -> {
       if (editorActivity != null) {
@@ -88,8 +87,7 @@ public class Core {
   }
 
   public void onTouchEvent(@NonNull MotionEvent event, WyrmSurface surface) {
-    editorActivity.handleButtonTouch(meshRenderer.getCamera());
-    input.onTouchEvent(event, surface);
+    inputManager.onTouchEvent(event);
   }
 
   public void onScroll(float distanceX, float distanceY, int width, int height) {

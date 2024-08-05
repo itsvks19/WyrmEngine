@@ -5,12 +5,9 @@ import java.io.Serializable
 
 class Touch : Serializable {
   var isDown = false
-  var isDownSetted = false
   var isUp = false
-  var isUpSetted = false
   var isPressed = false
   var isLongPressed = false
-  var isLongSetted = false
   var isSlided = false
 
   @JvmField

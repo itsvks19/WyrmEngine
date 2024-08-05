@@ -1,9 +1,12 @@
 package com.wyrm.engine.core.components.mesh
 
+import com.blankj.utilcode.util.ToastUtils
+import com.wyrm.engine.core.Core
 import com.wyrm.engine.core.components.Component
 import com.wyrm.engine.core.components.camera.Camera
 import com.wyrm.engine.core.configs.ScreenConfig
 import com.wyrm.engine.ext.getCoreContext
+import com.wyrm.engine.ext.runOnUiThread
 import com.wyrm.engine.graphics.shapes.Plane
 import glm_.func.rad
 import glm_.glm
@@ -34,6 +37,16 @@ class MeshRenderer : Component() {
     mesh.draw(model, camera.viewMatrix, projection)
 
     plane.draw(projection, camera)
+
+    if (Core.getInstance().inputManager.getTouch(0)?.isUp == true) {
+      runOnUiThread {
+        ToastUtils.showShort("0 up")
+      }
+    } else if (Core.getInstance().inputManager.getTouch(0)?.isDown == true) {
+      runOnUiThread {
+        ToastUtils.showShort("0 down")
+      }
+    }
 
     camera.onRepeat()
   }

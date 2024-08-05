@@ -59,24 +59,12 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
 
     binding.topBar.apply {
       val menu = mutableListOf(
-        MenuItem("File") {
-          toast("File")
-        },
-        MenuItem("Edit") {
-          toast("Edit")
-        },
-        MenuItem("View") {
-          toast("View")
-        },
-        MenuItem("Code") {
-          open(CodeActivity::class.java)
-        },
-        MenuItem("Build") {
-          toast("Build")
-        },
-        MenuItem("Help") {
-          toast("Help")
-        },
+        MenuItem("File") { toast("File") },
+        MenuItem("Edit") { toast("Edit") },
+        MenuItem("View") { toast("View") },
+        MenuItem("Code") { open(CodeActivity::class.java) },
+        MenuItem("Build") { toast("Build") },
+        MenuItem("Help") { toast("Help") },
       )
 
       dropdownMenu.apply {
@@ -85,7 +73,7 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
           LinearLayoutManager.HORIZONTAL,
           false
         )
-        adapter = EditorTopBarMenuAdapter(menu, this@EditorActivity)
+        adapter = EditorTopBarMenuAdapter(menu)
       }
 
       info.apply {

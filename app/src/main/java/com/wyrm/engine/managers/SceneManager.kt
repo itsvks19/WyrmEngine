@@ -16,9 +16,7 @@ class SceneManager {
 
   private val scenes = mutableListOf<Scene>()
 
-  fun getMainScene(): Scene {
-    return scenes.first()
-  }
+  val mainScene get() = scenes.first()
 
   fun addScene(scene: Scene) {
     scenes.add(scene)

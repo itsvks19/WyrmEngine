@@ -5,6 +5,5 @@ import glm_.vec3.Vec3
 
 data class RayHit(
   val point: Vec3,
-  val gameObject: GameObject,
-  val t: Float
+  val gameObject: GameObject
 )

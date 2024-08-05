@@ -1,6 +1,5 @@
 package com.wyrm.engine.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,8 +7,7 @@ import com.wyrm.engine.databinding.LayoutTopBarMenuItemBinding
 import com.wyrm.engine.model.MenuItem
 
 class EditorTopBarMenuAdapter @JvmOverloads constructor(
-  private val items: MutableList<MenuItem> = mutableListOf(),
-  private val context: Context
+  private val items: MutableList<MenuItem> = mutableListOf()
 ) : RecyclerView.Adapter<EditorTopBarMenuAdapter.VH>() {
   inner class VH(val binding: LayoutTopBarMenuItemBinding) : RecyclerView.ViewHolder(binding.root)
 
