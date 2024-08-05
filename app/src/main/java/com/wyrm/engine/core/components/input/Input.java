@@ -152,7 +152,7 @@ public class Input {
       if (touch.isLongPressed()) {
         touch.setLongPressed(false);
       } else if (touch.isPressed() && !touch.isLongSetted()) {
-        touch.pressedTime += Time.deltaTime;
+        touch.pressedTime += Time.getDeltaTime();
         if (touch.pressedTime >= (longClickMillis / 1000f)) {
           touch.setLongPressed(true);
           touch.setLongSetted(true);

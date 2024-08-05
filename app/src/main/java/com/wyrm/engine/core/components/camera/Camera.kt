@@ -39,6 +39,8 @@ class Camera @JvmOverloads constructor(
   var isMovingBackward = false
   var isMovingLeft = false
   var isMovingRight = false
+  var isMovingUp = false
+  var isMovingDown = false
 
   override fun getTitle(): String {
     return "Camera"
@@ -48,7 +50,7 @@ class Camera @JvmOverloads constructor(
   }
 
   override fun onRepeat() {
-    moveCamera(Time.deltaTime)
+    moveCamera(Time.getDeltaTime())
   }
 
   private fun moveCamera(deltaTime: Float) {
@@ -64,22 +66,24 @@ class Camera @JvmOverloads constructor(
     if (isMovingRight) {
       processButtons(CameraMovement.RIGHT, deltaTime)
     }
+    if (isMovingUp) {
+      processButtons(CameraMovement.UP, deltaTime)
+    }
+    if (isMovingDown) {
+      processButtons(CameraMovement.DOWN, deltaTime)
+    }
   }
 
   private fun processButtons(direction: CameraMovement, deltaTime: Float) {
     val velocity = movementSpeed * deltaTime
 
-    if (direction == CameraMovement.FORWARD) {
-      position += front * velocity
-    }
-    if (direction == CameraMovement.BACKWARD) {
-      position -= front * velocity
-    }
-    if (direction == CameraMovement.LEFT) {
-      position -= right * velocity
-    }
-    if (direction == CameraMovement.RIGHT) {
-      position += right * velocity
+    when (direction) {
+      CameraMovement.FORWARD -> position += front * velocity
+      CameraMovement.BACKWARD -> position -= front * velocity
+      CameraMovement.LEFT -> position -= right * velocity
+      CameraMovement.RIGHT -> position += right * velocity
+      CameraMovement.UP -> position += worldUp * velocity
+      CameraMovement.DOWN -> position -= worldUp * velocity
     }
   }
 

@@ -91,4 +91,28 @@
     app:layout_constraintBottom_toTopOf="@id/left"
     app:layout_constraintStart_toEndOf="@id/object_list" />
 
+  <ImageView
+    android:id="@+id/down"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_marginEnd="22dp"
+    android:layout_marginBottom="10dp"
+    android:contentDescription="@string/app_name"
+    android:src="@drawable/switch_down_outline"
+    android:tintMode="src_in"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+  <ImageView
+    android:id="@+id/up"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_marginEnd="22dp"
+    android:layout_marginBottom="10dp"
+    android:contentDescription="@string/app_name"
+    android:src="@drawable/switch_up_outline"
+    android:tintMode="src_in"
+    app:layout_constraintBottom_toTopOf="@id/down"
+    app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

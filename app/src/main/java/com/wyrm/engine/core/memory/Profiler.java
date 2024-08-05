@@ -26,7 +26,7 @@ public class Profiler {
       frameRate = frames;
       frames = 0;
       startTime = System.nanoTime();
-      frameTime = Utils.toDecimals(Time.deltaTime * 1000f, 2);
+      frameTime = Utils.toDecimals(Time.getDeltaTime() * 1000f, 2);
     }
   }
 

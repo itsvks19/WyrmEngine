@@ -4,17 +4,14 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_IMAGES
 import android.Manifest.permission.READ_MEDIA_VIDEO
 import android.Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia
 import androidx.core.widget.doOnTextChanged
-import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.PermissionUtils
-import com.wyrm.engine.Constants
 import com.wyrm.engine.activities.EditorActivity
 import com.wyrm.engine.activities.base.BaseActivity
 import com.wyrm.engine.databinding.ActivityNewProjectBinding
@@ -23,13 +20,12 @@ import com.wyrm.engine.ext.open
 import com.wyrm.engine.ext.toast
 import com.wyrm.engine.managers.ProjectManager
 import org.greenrobot.eventbus.EventBus
-import java.io.File
 
 class NewProjectActivity : BaseActivity<ActivityNewProjectBinding>(
   ActivityNewProjectBinding::inflate
 ) {
   private val pickMedia =
-    registerForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
+    registerForActivityResult(PickVisualMedia()) { uri ->
       uri?.let {
         binding.icon.setImageURI(it).also {
           pickedImageUri = uri
@@ -111,7 +107,7 @@ class NewProjectActivity : BaseActivity<ActivityNewProjectBinding>(
   private fun launchPhotoPicker() {
     pickMedia.launch(
       PickVisualMediaRequest.Builder()
-        .setMediaType(ActivityResultContracts.PickVisualMedia.ImageOnly)
+        .setMediaType(PickVisualMedia.ImageOnly)
         .build()
     )
   }

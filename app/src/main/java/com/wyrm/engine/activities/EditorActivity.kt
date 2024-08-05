@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.WindowManager
+import android.widget.ImageView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wyrm.engine.Constants
 import com.wyrm.engine.activities.base.BaseActivity
@@ -13,6 +14,7 @@ import com.wyrm.engine.adapters.EditorTopBarMenuAdapter
 import com.wyrm.engine.adapters.graphics.ObjectListAdapter
 import com.wyrm.engine.core.Core
 import com.wyrm.engine.core.components.camera.Camera
+import com.wyrm.engine.core.memory.Profiler
 import com.wyrm.engine.core.objects.GameObject
 import com.wyrm.engine.databinding.ActivityEditorBinding
 import com.wyrm.engine.ext.decrypt
@@ -26,6 +28,7 @@ import com.wyrm.engine.managers.SceneManager
 import com.wyrm.engine.model.MenuItem
 import com.wyrm.engine.model.project.Project
 import java.io.File
+import kotlin.reflect.KMutableProperty0
 
 @SuppressLint("SetTextI18n")
 class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding::inflate) {
@@ -62,16 +65,13 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
         MenuItem("Help"),
       )
 
-
-
-
       dropdownMenu.apply {
         layoutManager = LinearLayoutManager(
           this@EditorActivity,
           LinearLayoutManager.HORIZONTAL,
           false
         )
-        adapter = EditorTopBarMenuAdapter(menu,this@EditorActivity)
+        adapter = EditorTopBarMenuAdapter(menu, this@EditorActivity)
       }
 
       info.apply {
@@ -95,88 +95,46 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
     }
   }
 
-  fun updateInfoText(text: String) {
+  private fun updateInfoText(text: String) {
     binding.topBar.info.text = text
   }
 
   fun updateUiOnRepeat() {
-
+    updateInfoText("FPS: ${Profiler.frameRate}")
   }
 
   fun updateFov(fov: Float) {
     binding.fov.text = "FOV: ${fov.toDecimals(1)}"
   }
 
-  @SuppressLint("ClickableViewAccessibility")
   fun handleButtonTouch(camera: Camera) {
     binding.apply {
-      forward.setOnTouchListener { _, event ->
-        when (event.actionMasked) {
-          MotionEvent.ACTION_DOWN -> {
-            forward.imageTintList = ColorStateList.valueOf(Color.GREEN)
-            camera.isMovingForward = true
-            true
-          }
+      setupButton(forward, camera::isMovingForward)
+      setupButton(backward, camera::isMovingBackward)
+      setupButton(left, camera::isMovingLeft)
+      setupButton(right, camera::isMovingRight)
+      setupButton(up, camera::isMovingUp)
+      setupButton(down, camera::isMovingDown)
+    }
+  }
 
-          MotionEvent.ACTION_UP -> {
-            forward.imageTintList = ColorStateList.valueOf(Color.WHITE)
-            camera.isMovingForward = false
-            true
-          }
-
-          else -> false
+  @SuppressLint("ClickableViewAccessibility")
+  private fun setupButton(button: ImageView, cameraMovement: KMutableProperty0<Boolean>) {
+    button.setOnTouchListener { _, event ->
+      when (event.actionMasked) {
+        MotionEvent.ACTION_DOWN -> {
+          button.imageTintList = ColorStateList.valueOf(Color.GREEN)
+          cameraMovement.set(true)
+          true
         }
-      }
-      backward.setOnTouchListener { _, event ->
-        when (event.actionMasked) {
-          MotionEvent.ACTION_DOWN -> {
-            backward.imageTintList = ColorStateList.valueOf(Color.GREEN)
-            camera.isMovingBackward = true
-            true
-          }
 
-          MotionEvent.ACTION_UP -> {
-            backward.imageTintList = ColorStateList.valueOf(Color.WHITE)
-            camera.isMovingBackward = false
-            true
-          }
-
-          else -> false
+        MotionEvent.ACTION_UP -> {
+          button.imageTintList = ColorStateList.valueOf(Color.WHITE)
+          cameraMovement.set(false)
+          true
         }
-      }
-      left.setOnTouchListener { _, event ->
-        when (event.actionMasked) {
-          MotionEvent.ACTION_DOWN -> {
-            left.imageTintList = ColorStateList.valueOf(Color.GREEN)
-            camera.isMovingLeft = true
-            true
-          }
 
-          MotionEvent.ACTION_UP -> {
-            left.imageTintList = ColorStateList.valueOf(Color.WHITE)
-            camera.isMovingLeft = false
-            true
-          }
-
-          else -> false
-        }
-      }
-      right.setOnTouchListener { _, event ->
-        when (event.actionMasked) {
-          MotionEvent.ACTION_DOWN -> {
-            right.imageTintList = ColorStateList.valueOf(Color.GREEN)
-            camera.isMovingRight = true
-            true
-          }
-
-          MotionEvent.ACTION_UP -> {
-            right.imageTintList = ColorStateList.valueOf(Color.WHITE)
-            camera.isMovingRight = false
-            true
-          }
-
-          else -> false
-        }
+        else -> false
       }
     }
   }
