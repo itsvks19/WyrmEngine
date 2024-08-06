@@ -22,3 +22,7 @@ extern "C" JNIEXPORT void JNICALL
 Java_com_wyrm_engine_core_cpp_renderer_ImGuiRenderer_surfaceChange(JNIEnv *env, jclass clazz, jint width, jint height) {
   helper.surfaceChange(width, height);
 }
+extern "C" JNIEXPORT void JNICALL
+Java_com_wyrm_engine_core_cpp_renderer_ImGuiRenderer_destroy(JNIEnv *env, jclass clazz) {
+  helper.shutdown();
+}

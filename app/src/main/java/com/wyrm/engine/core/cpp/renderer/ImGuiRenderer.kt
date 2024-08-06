@@ -12,4 +12,7 @@ object ImGuiRenderer {
 
   @JvmStatic
   external fun surfaceChange(width: Int, height: Int)
+
+  @JvmStatic
+  external fun destroy()
 }

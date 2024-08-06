@@ -25,6 +25,7 @@ public:
   void init(ANativeWindow* nativeWindow);
   void mainLoop(JNIEnv* env, jobject wyrm_surface);
   void surfaceChange(int width, int height);
+  void shutdown();
 };
 
 

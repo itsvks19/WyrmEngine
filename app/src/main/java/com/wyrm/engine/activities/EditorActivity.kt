@@ -6,6 +6,7 @@ import android.view.WindowManager
 import com.wyrm.engine.Constants
 import com.wyrm.engine.activities.base.BaseActivity
 import com.wyrm.engine.core.Core
+import com.wyrm.engine.core.cpp.renderer.ImGuiRenderer
 import com.wyrm.engine.core.objects.GameObject
 import com.wyrm.engine.databinding.ActivityEditorBinding
 import com.wyrm.engine.ext.decrypt
@@ -54,6 +55,7 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
   override fun onDestroy() {
     super.onDestroy()
     ProjectManager.instance.closeProject()
+    ImGuiRenderer.destroy()
     Core.getInstance().destroy()
   }
 }

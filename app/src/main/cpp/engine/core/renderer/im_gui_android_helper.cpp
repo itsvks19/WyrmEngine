@@ -179,3 +179,15 @@ void ImGuiAndroidHelper::pollUnicodeChar(JNIEnv *env, jobject wyrm_surface) {
   while ((unicode_character = env->CallIntMethod(wyrm_surface, methodId)) != 0)
     io.AddInputCharacter(unicode_character);
 }
+
+void ImGuiAndroidHelper::shutdown() {
+  if (!g_Initialized)
+    return;
+
+  // Cleanup
+  ImGui_ImplOpenGL3_Shutdown();
+  ImGui_ImplAndroid_Shutdown();
+  ImGui::DestroyContext();
+
+  g_Initialized = false;
+}
