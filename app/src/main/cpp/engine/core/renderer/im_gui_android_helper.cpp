@@ -34,7 +34,7 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
   ImGuiIO &io = ImGui::GetIO();
 
   // Redirect loading/saving of .ini file to our location.
-  g_IniFilename = WyrmEngine::Util::configs_dir + "/imgui.ini";
+  g_IniFilename  = WyrmEngine::Util::configs_dir + "/imgui.ini";
   io.IniFilename = g_IniFilename.c_str();
 
   // Setup Dear ImGui style
@@ -53,7 +53,7 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
   int font_data_size;
   ImFont *font;
   font_data_size = WyrmEngine::Util::ReadFromAsset("engine/fonts/Roboto-Medium.ttf", &font_data);
-  font           = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 22.0f, &font_cfg);
+  font           = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 23.0f, &font_cfg);
   IM_ASSERT(font != nullptr);
   //font_data_size = WyrmEngine::Util::ReadFromAsset("DroidSans.ttf", &font_data);
   //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 16.0f);
@@ -62,6 +62,16 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
   // Arbitrary scale-up
   // FIXME: Put some effort into DPI awareness
   ImGui::GetStyle().ScaleAllSizes(2.5f);
+
+  ImGuiStyle &style = ImGui::GetStyle();
+
+  style.WindowRounding    = 8.0f;
+  style.FrameRounding     = 8.0f;
+  style.ChildRounding     = 8.0f;
+  style.PopupRounding     = 8.0f;
+  style.GrabRounding      = 8.0f;
+  style.ScrollbarRounding = 14.0f;
+  style.TabRounding       = 10.0f;
 
   g_Initialized = true;
 }
@@ -117,6 +127,7 @@ void ImGuiAndroidHelper::mainLoop(JNIEnv *env, jobject wyrm_surface) {
     if (ImGui::BeginMenu("Help")) {
       ImGui::EndMenu();
     }
+    ImGui::Text("Hello");
     ImGui::EndMainMenuBar();
   }
 
@@ -132,8 +143,9 @@ void ImGuiAndroidHelper::mainLoop(JNIEnv *env, jobject wyrm_surface) {
   ////
 
   // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-  // if (show_demo_window)
-  //   ImGui::ShowDemoWindow(&show_demo_window);
+  if (show_demo_window) {
+    // ImGui::ShowDemoWindow(&show_demo_window);
+  }
 
   // Rendering
   ImGui::Render();
