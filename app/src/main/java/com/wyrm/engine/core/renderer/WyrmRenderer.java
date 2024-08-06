@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.wyrm.engine.core.Core;
 import com.wyrm.engine.core.components.color.Color;
 import com.wyrm.engine.core.configs.ScreenConfig;
+import com.wyrm.engine.core.cpp.renderer.ImGuiRenderer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -39,6 +40,8 @@ public class WyrmRenderer implements GLSurfaceView.Renderer {
     GLES30.glEnable(GLES30.GL_DEPTH_TEST);
     GLES30.glDepthFunc(GLES30.GL_LEQUAL);
 
+    ImGuiRenderer.init(surface.getHolder().getSurface());
+
     Core.getInstance().onSurfaceCreated(this, context);
   }
 
@@ -47,6 +50,9 @@ public class WyrmRenderer implements GLSurfaceView.Renderer {
     ScreenConfig.getInstance().setGlWidth(width);
     ScreenConfig.getInstance().setGlHeight(height);
     GLES30.glViewport(0, 0, width, height);
+
+    ImGuiRenderer.surfaceChange(width, height);
+
     Core.getInstance().onSurfaceChanged(context, width, height);
     this.width = width;
     this.height = height;
@@ -55,6 +61,9 @@ public class WyrmRenderer implements GLSurfaceView.Renderer {
   @Override
   public void onDrawFrame(GL10 gl) {
     GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_DEPTH_BUFFER_BIT);
+
+    ImGuiRenderer.mainLoop(surface);
+
     Core.getInstance().repeatEveryFrame(context, width, height);
   }
 

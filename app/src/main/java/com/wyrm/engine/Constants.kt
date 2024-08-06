@@ -24,5 +24,8 @@ object Constants {
   val FILES_PATH: String = PathUtils.getExternalAppFilesPath()
 
   @JvmField
+  val IMGUI_INI_PATH = "$FILES_PATH/.configs/imgui.ini"
+
+  @JvmField
   val PROJECTS_PATH = "${FILES_PATH}/Projects"
 }

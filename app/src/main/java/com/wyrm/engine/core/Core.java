@@ -2,22 +2,18 @@ package com.wyrm.engine.core;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.opengl.GLES30;
 import android.view.MotionEvent;
 
 import androidx.annotation.NonNull;
 
-import com.blankj.utilcode.util.ToastUtils;
 import com.wyrm.engine.Time;
 import com.wyrm.engine.activities.EditorActivity;
 import com.wyrm.engine.core.components.console.Console;
 import com.wyrm.engine.core.components.input.InputManager;
-import com.wyrm.engine.core.components.mesh.MeshRenderer;
 import com.wyrm.engine.core.memory.Profiler;
 import com.wyrm.engine.core.renderer.WyrmRenderer;
 import com.wyrm.engine.core.renderer.WyrmSurface;
 import com.wyrm.engine.ext.ThreadingKt;
-import com.wyrm.engine.managers.SceneManager;
 
 public class Core {
   @SuppressLint("StaticFieldLeak")
@@ -33,8 +29,6 @@ public class Core {
   public boolean isStarted = false;
   public boolean isGlContextCreated = false;
 
-  private MeshRenderer meshRenderer;
-
   public static Core getInstance() {
     if (instance == null) {
       instance = new Core();
@@ -44,15 +38,12 @@ public class Core {
 
   public void onStart(Context context) {
     this.context = context;
-    ToastUtils.showShort("Core Started...");
   }
 
   public void onStartEngine(Context context, EditorActivity activity) {
     this.editorContext = context;
     this.editorActivity = activity;
     inputManager.init(context);
-
-    meshRenderer = new MeshRenderer();
 
     isStarted = true;
   }
@@ -68,8 +59,6 @@ public class Core {
 
   public void onSurfaceCreated(WyrmRenderer renderer, Context surfaceContext) {
     isGlContextCreated = true;
-    meshRenderer.onStart();
-    editorActivity.handleButtonTouch(meshRenderer.getCamera());
   }
 
   public void repeatEveryFrame(Context surfaceContext, int width, int height) {
@@ -77,13 +66,8 @@ public class Core {
     Profiler.update();
     inputManager.preFrame();
 
-    meshRenderer.onRepeat();
-    var color = SceneManager.getInstance().getMainScene().getLightSettings().getSpaceColor();
-    GLES30.glClearColor(color.r, color.g, color.b, color.a);
-
     ThreadingKt.runOnUiThread(() -> {
       if (editorActivity != null) {
-        editorActivity.updateFov(meshRenderer.getCamera().getZoom());
         editorActivity.updateUiOnRepeat();
       }
       return null;
@@ -98,16 +82,15 @@ public class Core {
     float rotationX = distanceX / width;
     float rotationY = distanceY / height;
 
-    meshRenderer.getCamera().processTouchMovement(-rotationX, rotationY);
+    //// DO SOMETHING
   }
 
   public void onScale(float scaleFactor) {
-    console.log("scaleFactor: " + scaleFactor);
-    meshRenderer.getCamera().processZoom(scaleFactor);
+    //// DO SOMETHING
   }
 
   public void onSurfaceChanged(Context surfaceContext, int width, int height) {
-    meshRenderer.onChanged();
+    //// DO SOMETHING
   }
 
   public Context getContext() {

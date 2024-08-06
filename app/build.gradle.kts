@@ -15,6 +15,16 @@ android {
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+    ndk {
+      abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a"))
+    }
+
+    externalNativeBuild {
+      cmake {
+        arguments.add("-DANDROID_WEAK_API_DEFS=ON")
+      }
+    }
   }
 
   buildTypes {
@@ -33,6 +43,13 @@ android {
   buildFeatures {
     viewBinding = true
     buildConfig = true
+  }
+  externalNativeBuild {
+    cmake {
+      path = file("src/main/cpp/CMakeLists.txt")
+      version = "3.22.1"
+      buildStagingDirectory = file("build-native")
+    }
   }
 }
 
