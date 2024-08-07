@@ -34,6 +34,15 @@
     app:layout_constraintTop_toTopOf="parent"
     app:shapeAppearance="?shapeAppearanceCornerSmall" />
 
+  <com.google.android.material.progressindicator.LinearProgressIndicator
+    android:id="@+id/loading_progress"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:indeterminate="true"
+    app:layout_constraintTop_toBottomOf="@id/heading"
+    app:trackThickness="2dp" />
+
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/projects_list"
     android:layout_width="match_parent"
@@ -41,6 +50,6 @@
     android:layout_margin="5dp"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toBottomOf="@id/heading" />
+    app:layout_constraintTop_toBottomOf="@id/loading_progress" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
