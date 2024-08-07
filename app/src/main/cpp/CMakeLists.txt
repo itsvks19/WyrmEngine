@@ -33,7 +33,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-variable -DUSE_DEBUG_EXTENSI
 # used in the AndroidManifest.xml file.
 add_library(${CMAKE_PROJECT_NAME} SHARED
         # List C/C++ source files with relative paths to this CMakeLists.txt.
-        engine/core/imgui/imgui_input_handler.cpp
+        engine/core/imgui/input/imgui_input_handler.cpp
         engine/core/imgui/imgui_renderer_helper.cpp
         engine/core/renderer/im_gui_android_helper.cpp
         engine/graphics/scene/scene.cpp

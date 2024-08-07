@@ -9,6 +9,7 @@
 #include <cstring>
 #include <fstream>
 
+#include "core/imgui/input/scroll_handler.h"
 #include "ext/toast.h"
 #include "graphics/scene/scene.h"
 #include "imgui.h"
@@ -65,6 +66,8 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
   IM_ASSERT(font != nullptr);
 
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+  io.ConfigWindowsMoveFromTitleBarOnly = true;
   // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
   // Arbitrary scale-up
@@ -85,11 +88,6 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
 }
 void ImGuiAndroidHelper::mainLoop(JNIEnv *env) {
   ImGuiIO &io = ImGui::GetIO();
-
-  // Our state
-  // (we use static, which essentially makes the variable globals, as a convenience to keep the example code easy to follow)
-  static bool show_demo_window    = true;
-  static bool show_another_window = false;
 
   // Poll Unicode characters via JNI
   // FIXME: do not call this every frame because of JNI overhead
@@ -153,10 +151,10 @@ void ImGuiAndroidHelper::mainLoop(JNIEnv *env) {
   }
   ////
 
-  // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
-  if (show_demo_window) {
-    ImGui::ShowDemoWindow(&show_demo_window);
-  }
+  ImGui::ShowDemoWindow();
+  ImGui::Begin("Dear ImGui Demo");
+  ImGui::MakeScrollableByTouch();
+  ImGui::End();
 
   // Rendering
   ImGui::Render();
