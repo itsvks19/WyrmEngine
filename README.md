@@ -13,15 +13,6 @@ This software is licensed under a proprietary license. By using this software, y
 
 Please see the [EULA](EULA.md) file for the full license agreement. 
 
-### Key Terms
-
-- **Commercial Use**: You may not use the Software for commercial purposes without prior written permission from the Author.
-- **Ads Integration**: The Author reserves the right to integrate ads within the Software. You are prohibited from integrating your ads without permission.
-- **Modification and Redistribution**: You may not modify, distribute, or create derivative works of the Software.
-- **Reverse Engineering**: You may not reverse engineer, decompile, or disassemble the Software.
-
-For more information or any inquiries, please contact [itsvks19@gmail.com](mailto:itsvks19@gmail.com).
-
 ## Features
 
 - **3D Rendering**: Create stunning 3D environments with advanced rendering techniques.
