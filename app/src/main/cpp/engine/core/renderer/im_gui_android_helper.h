@@ -17,13 +17,13 @@ private:
 
   ANativeWindow* window;
 
-  static void showSoftInput(JNIEnv* env, jobject wyrm_surface);
-  static void hideSoftInput(JNIEnv* env, jobject wyrm_surface);
-  static void pollUnicodeChar(JNIEnv* env, jobject wyrm_surface);
+  static void showSoftInput(JNIEnv* env);
+  static void hideSoftInput(JNIEnv* env);
+  static void pollUnicodeChar(JNIEnv* env);
 
 public:
   void init(ANativeWindow* nativeWindow);
-  void mainLoop(JNIEnv* env, jobject wyrm_surface);
+  void mainLoop(JNIEnv* env);
   void surfaceChange(int width, int height);
   void shutdown();
 };

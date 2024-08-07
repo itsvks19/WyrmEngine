@@ -9,10 +9,12 @@
 #include <cstring>
 #include <fstream>
 
+#include "ext/toast.h"
 #include "graphics/scene/scene.h"
 #include "imgui.h"
 #include "imgui_impl_android.h"
 #include "imgui_impl_opengl3.h"
+#include "imgui_internal.h"
 #include "imgui_scene_data.h"
 #include "utils/util.h"
 
@@ -52,10 +54,14 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
   // Important: when calling AddFontFromMemoryTTF(), ownership of font_data is transferred by Dear ImGui by default (deleted is handled by Dear ImGui), unless we set FontDataOwnedByAtlas=false in ImFontConfig
   void *font_data;
   int font_data_size;
-  ImFont *font;
-
   font_data_size = WyrmEngine::Util::ReadFromAsset("engine/fonts/Roboto-Medium.ttf", &font_data);
-  font           = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 23.0f);
+  ImFont *font;
+  ImFontConfig fontConfig;
+  if (fontConfig.SizePixels <= 0.0f) fontConfig.SizePixels = 23.0f;
+  if (fontConfig.Name[0] == '\0') {
+    ImFormatString(fontConfig.Name, IM_ARRAYSIZE(fontConfig.Name), "Roboto, %dpx", (int) fontConfig.SizePixels);
+  }
+  font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 23.0f, &fontConfig);
   IM_ASSERT(font != nullptr);
 
   io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
@@ -77,7 +83,7 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
 
   g_Initialized = true;
 }
-void ImGuiAndroidHelper::mainLoop(JNIEnv *env, jobject wyrm_surface) {
+void ImGuiAndroidHelper::mainLoop(JNIEnv *env) {
   ImGuiIO &io = ImGui::GetIO();
 
   // Our state
@@ -87,14 +93,14 @@ void ImGuiAndroidHelper::mainLoop(JNIEnv *env, jobject wyrm_surface) {
 
   // Poll Unicode characters via JNI
   // FIXME: do not call this every frame because of JNI overhead
-  ImGuiAndroidHelper::pollUnicodeChar(env, wyrm_surface);
+  ImGuiAndroidHelper::pollUnicodeChar(env);
 
   // Open on-screen (soft) input if requested by Dear ImGui
   static bool WantTextInputLast = false;
   if (io.WantTextInput && !WantTextInputLast) {
-    ImGuiAndroidHelper::showSoftInput(env, wyrm_surface);
+    ImGuiAndroidHelper::showSoftInput(env);
   } else if (!io.WantTextInput && WantTextInputLast) {
-    ImGuiAndroidHelper::hideSoftInput(env, wyrm_surface);
+    ImGuiAndroidHelper::hideSoftInput(env);
   }
   WantTextInputLast = io.WantTextInput;
 
@@ -139,6 +145,10 @@ void ImGuiAndroidHelper::mainLoop(JNIEnv *env, jobject wyrm_surface) {
     ImGui::Begin("Light Settings", &show_light_settings);
     ImGui::ColorEdit3("Space color", (float *) &test_scene.getLightSettings()->space_color);
     ImGui::ColorEdit3("Ambient color", (float *) &test_scene.getLightSettings()->ambient_color);
+
+    if (ImGui::Button("Show Toast")) {
+      Toast::Show(env, "Hello");
+    }
     ImGui::End();
   }
   ////
@@ -161,24 +171,33 @@ void ImGuiAndroidHelper::surfaceChange(int width, int height) {
   this->height = height;
   glViewport(0, 0, this->width, this->height);
 }
-void ImGuiAndroidHelper::showSoftInput(JNIEnv *env, jobject wyrm_surface) {
+void ImGuiAndroidHelper::showSoftInput(JNIEnv *env) {
+  auto wyrm_surface = WyrmApplication::GetWyrmSurface();
+
   jclass clazz       = env->GetObjectClass(wyrm_surface);
   jmethodID methodId = env->GetMethodID(clazz, "showSoftInput", "()V");
   env->CallVoidMethod(wyrm_surface, methodId);
 }
-void ImGuiAndroidHelper::hideSoftInput(JNIEnv *env, jobject wyrm_surface) {
+void ImGuiAndroidHelper::hideSoftInput(JNIEnv *env) {
+  auto wyrm_surface = WyrmApplication::GetWyrmSurface();
+
   jclass clazz       = env->GetObjectClass(wyrm_surface);
   jmethodID methodId = env->GetMethodID(clazz, "hideSoftInput", "()V");
   env->CallVoidMethod(wyrm_surface, methodId);
 }
-void ImGuiAndroidHelper::pollUnicodeChar(JNIEnv *env, jobject wyrm_surface) {
-  jclass clazz       = env->GetObjectClass(wyrm_surface);
+void ImGuiAndroidHelper::pollUnicodeChar(JNIEnv *env) {
+  auto wyrm_surface = WyrmApplication::GetWyrmSurface();
+  auto ref          = env->NewLocalRef(wyrm_surface);
+
+  jclass clazz       = env->GetObjectClass(ref);
   jmethodID methodId = env->GetMethodID(clazz, "pollUnicodeChar", "()I");
 
   ImGuiIO &io = ImGui::GetIO();
   jint unicode_character;
-  while ((unicode_character = env->CallIntMethod(wyrm_surface, methodId)) != 0)
+  while ((unicode_character = env->CallIntMethod(ref, methodId)) != 0)
     io.AddInputCharacter(unicode_character);
+
+  env->DeleteLocalRef(ref);
 }
 
 void ImGuiAndroidHelper::shutdown() {

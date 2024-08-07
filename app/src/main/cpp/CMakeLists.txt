@@ -39,6 +39,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         engine/graphics/scene/scene.cpp
         engine/graphics/scene/settings/light_settings.cpp
         engine/utils/util.cpp
+        engine/wyrm_application.cpp
         third-party/imgui/imgui.cpp
         third-party/imgui/imgui_demo.cpp
         third-party/imgui/imgui_draw.cpp

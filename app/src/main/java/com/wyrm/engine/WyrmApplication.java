@@ -1,3 +1,12 @@
+/*
+ * This file is a part of WyrmEngine.
+ *
+ * This software is provided 'as-is', without any express or implied warranty.
+ * In no event will the authors be held liable for any damages arising from the use of this software.
+ *
+ * For terms of use and licensing, please see the End-User License Agreement (EULA).
+ */
+
 package com.wyrm.engine;
 
 import android.app.Activity;
@@ -26,6 +35,7 @@ public class WyrmApplication extends Application {
   public void onCreate() {
     super.onCreate();
     Core.getInstance().onStart(getApplicationContext());
+    nativeInit();
     setAssets(getAssets());
     FileUtils.createOrExistsDir(Constants.FILES_PATH + "/.configs");
     setExternalFilesDir(Constants.FILES_PATH);
@@ -72,6 +82,8 @@ public class WyrmApplication extends Application {
     super.onTerminate();
     Core.getInstance().destroyCore();
   }
+
+  private native void nativeInit();
 
   private native void setAssets(AssetManager assets);
 
