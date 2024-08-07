@@ -8,6 +8,7 @@
 //  [ ] Platform: Clipboard support.
 //  [ ] Platform: Gamepad support. Enable with 'io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad'.
 //  [ ] Platform: Mouse cursor shape and visibility. Disable with 'io.ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange'. FIXME: Check if this is even possible with Android.
+//  [ ] Platform: Multi-viewport support (multiple windows). Not meaningful on Android.
 // Important:
 //  - Consider using SDL or GLFW backend on Android, which will be more full-featured than this.
 //  - FIXME: On-screen keyboard currently needs to be enabled by the application (see examples/ and issue #3446)
@@ -30,9 +31,7 @@
 //  2021-03-04: Initial version.
 
 #include "imgui.h"
-
 #ifndef IMGUI_DISABLE
-
 #include <android/input.h>
 #include <android/keycodes.h>
 #include <android/log.h>
@@ -43,9 +42,9 @@
 #include "imgui_impl_android.h"
 
 // Android data
-static double g_Time   = 0.0;
+static double g_Time = 0.0;
+static ANativeWindow* g_Window;
 static char g_LogTag[] = "WyrmNative";
-static ANativeWindow *g_Window;
 
 ImGuiKey ImGui_ImplAndroid_KeyCodeToImGuiKey(int32_t key_code) {
   switch (key_code) {
@@ -264,8 +263,8 @@ ImGuiKey ImGui_ImplAndroid_KeyCodeToImGuiKey(int32_t key_code) {
   }
 }
 
-int32_t ImGui_ImplAndroid_HandleInputEvent(const AInputEvent *input_event) {
-  ImGuiIO &io        = ImGui::GetIO();
+int32_t ImGui_ImplAndroid_HandleInputEvent(const AInputEvent* input_event) {
+  ImGuiIO& io        = ImGui::GetIO();
   int32_t event_type = AInputEvent_getType(input_event);
   switch (event_type) {
     case AINPUT_EVENT_TYPE_KEY: {
@@ -357,26 +356,26 @@ int32_t ImGui_ImplAndroid_HandleInputEvent(const AInputEvent *input_event) {
   return 0;
 }
 
-bool ImGui_ImplAndroid_Init(ANativeWindow *window) {
+bool ImGui_ImplAndroid_Init(ANativeWindow* window) {
   IMGUI_CHECKVERSION();
 
   g_Window = window;
   g_Time   = 0.0;
 
   // Setup backend capabilities flags
-  ImGuiIO &io            = ImGui::GetIO();
-  io.BackendPlatformName = "WyrmEngine_ImGui_Impl_Android";
+  ImGuiIO& io            = ImGui::GetIO();
+  io.BackendPlatformName = "WyrmEngine Android";
 
   return true;
 }
 
 void ImGui_ImplAndroid_Shutdown() {
-  ImGuiIO &io            = ImGui::GetIO();
+  ImGuiIO& io            = ImGui::GetIO();
   io.BackendPlatformName = nullptr;
 }
 
 void ImGui_ImplAndroid_NewFrame() {
-  ImGuiIO &io = ImGui::GetIO();
+  ImGuiIO& io = ImGui::GetIO();
 
   // Setup display size (every frame to accommodate for window resizing)
   int32_t window_width  = ANativeWindow_getWidth(g_Window);

@@ -46,6 +46,7 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
         third-party/imgui/imgui_widgets.cpp
         third-party/imgui/backends/imgui_impl_android.cpp
         third-party/imgui/backends/imgui_impl_opengl3.cpp
+        third-party/imgui/backends/imgui_impl_vulkan.cpp
 )
 
 add_subdirectory(third-party/glm)

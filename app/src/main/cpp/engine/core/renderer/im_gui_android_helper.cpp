@@ -7,6 +7,7 @@
 #include <GLES3/gl32.h>
 
 #include <cstring>
+#include <fstream>
 
 #include "graphics/scene/scene.h"
 #include "imgui.h"
@@ -28,6 +29,8 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
   this->width  = ANativeWindow_getWidth(nativeWindow);
   this->height = ANativeWindow_getHeight(nativeWindow);
 
+  std::ofstream test(WyrmEngine::Util::files_dir + "/test.wyrm");
+
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();
   ImGui::CreateContext();
@@ -47,17 +50,16 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
 
   // FIXME: Put some effort into DPI awareness.
   // Important: when calling AddFontFromMemoryTTF(), ownership of font_data is transferred by Dear ImGui by default (deleted is handled by Dear ImGui), unless we set FontDataOwnedByAtlas=false in ImFontConfig
-  ImFontConfig font_cfg;
-  font_cfg.SizePixels = 23.0f;
   void *font_data;
   int font_data_size;
   ImFont *font;
+
   font_data_size = WyrmEngine::Util::ReadFromAsset("engine/fonts/Roboto-Medium.ttf", &font_data);
-  font           = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 23.0f, &font_cfg);
+  font           = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 23.0f);
   IM_ASSERT(font != nullptr);
-  //font_data_size = WyrmEngine::Util::ReadFromAsset("DroidSans.ttf", &font_data);
-  //font = io.Fonts->AddFontFromMemoryTTF(font_data, font_data_size, 16.0f);
-  //IM_ASSERT(font != nullptr);
+
+  io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+  // io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
   // Arbitrary scale-up
   // FIXME: Put some effort into DPI awareness
