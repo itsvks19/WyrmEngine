@@ -2,6 +2,7 @@ package com.wyrm.engine.ui.dialog
 
 import android.content.Context
 import android.graphics.drawable.GradientDrawable
+import android.text.method.LinkMovementMethod
 import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
@@ -33,6 +34,7 @@ class WyrmDialog(
       title.hide()
       positiveButton.hide()
       negativeButton.hide()
+      message.movementMethod = LinkMovementMethod.getInstance()
 
       builder.setView(root)
     }
@@ -49,6 +51,7 @@ class WyrmDialog(
   }
 
   fun setView(view: View?): WyrmDialog {
+    binding.container.show()
     binding.container.addView(view)
     return this
   }
