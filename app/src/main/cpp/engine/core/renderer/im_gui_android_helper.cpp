@@ -113,9 +113,7 @@ void ImGuiAndroidHelper::mainLoop(JNIEnv *env, jobject wyrm_surface) {
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Scene")) {
-      if (ImGui::MenuItem("Light Settings")) {
-        show_light_settings = true;
-      }
+      if (ImGui::MenuItem("Light Settings")) { show_light_settings = true; }
       ImGui::EndMenu();
     }
     if (ImGui::BeginMenu("Code")) {
@@ -127,7 +125,8 @@ void ImGuiAndroidHelper::mainLoop(JNIEnv *env, jobject wyrm_surface) {
     if (ImGui::BeginMenu("Help")) {
       ImGui::EndMenu();
     }
-    ImGui::Text("Hello");
+    ImGui::SameLine(ImGui::GetWindowWidth() - 220);
+    ImGui::Text("%.2f FPS (%.2f ms)", io.Framerate, 1000.0f / io.Framerate);
     ImGui::EndMainMenuBar();
   }
 
@@ -136,21 +135,21 @@ void ImGuiAndroidHelper::mainLoop(JNIEnv *env, jobject wyrm_surface) {
   //// MAIN MENU FUNCTIONS
   if (show_light_settings) {
     ImGui::Begin("Light Settings", &show_light_settings);
-    ImGui::ColorEdit3("Space color", (float *) &test_scene.lightSettings.space_color);
-    ImGui::ColorEdit3("Ambient color", (float *) &test_scene.lightSettings.ambient_color);
+    ImGui::ColorEdit3("Space color", (float *) &test_scene.getLightSettings()->space_color);
+    ImGui::ColorEdit3("Ambient color", (float *) &test_scene.getLightSettings()->ambient_color);
     ImGui::End();
   }
   ////
 
   // 1. Show the big demo window (Most of the sample code is in ImGui::ShowDemoWindow()! You can browse its code to learn more about Dear ImGui!).
   if (show_demo_window) {
-    // ImGui::ShowDemoWindow(&show_demo_window);
+    ImGui::ShowDemoWindow(&show_demo_window);
   }
 
   // Rendering
   ImGui::Render();
   glViewport(0, 0, (int) io.DisplaySize.x, (int) io.DisplaySize.y);
-  auto clear_color = test_scene.lightSettings.space_color;
+  auto clear_color = test_scene.getLightSettings()->space_color;
   glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
   glClear(GL_COLOR_BUFFER_BIT);
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

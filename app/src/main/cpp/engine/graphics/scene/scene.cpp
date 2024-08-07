@@ -5,5 +5,5 @@
 #include "scene.h"
 
 
-Scene::Scene(std::string name) : name(std::move(name)) {
+Scene::Scene(std::string name, LightSettings* lightSettings) : name(std::move(name)), lightSettings(*lightSettings) {
 }
