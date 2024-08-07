@@ -33,7 +33,7 @@ class ProjectsActivity : BaseActivity<ActivityProjectsBinding>(ActivityProjectsB
         CoroutineScope(Dispatchers.IO).launch {
           projects = ProjectManager.instance.projects.toMutableList()
         }.invokeOnCompletion {
-          CoroutineScope(Dispatchers.Main).launch {
+          runOnUiThread {
             layoutManager = GridLayoutManager(this@ProjectsActivity, 4)
             adapter = ProjectsAdapter(projects)
             binding.loadingProgress.hide()

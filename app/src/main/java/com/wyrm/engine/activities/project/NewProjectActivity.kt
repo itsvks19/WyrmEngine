@@ -101,7 +101,9 @@ class NewProjectActivity : BaseActivity<ActivityNewProjectBinding>(
 
   private fun handlePermissions(vararg permissions: String) {
     if (permissions.all { PermissionUtils.isGranted(it) }) launchPhotoPicker()
-    else requestPermissions.launch(permissions.toList().toTypedArray())
+    else requestPermissions.launch(
+      permissions.filter { !PermissionUtils.isGranted(it) }.toTypedArray()
+    )
   }
 
   private fun launchPhotoPicker() {
