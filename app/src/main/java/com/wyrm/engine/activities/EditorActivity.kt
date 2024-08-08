@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.view.WindowManager
 import com.wyrm.engine.Constants
 import com.wyrm.engine.activities.base.BaseActivity
+import com.wyrm.engine.activities.project.ProjectsActivity
 import com.wyrm.engine.core.Core
 import com.wyrm.engine.core.cpp.renderer.ImGuiRenderer
 import com.wyrm.engine.core.objects.GameObject
@@ -21,6 +22,7 @@ import com.wyrm.engine.databinding.ActivityEditorBinding
 import com.wyrm.engine.ext.decrypt
 import com.wyrm.engine.ext.encrypt
 import com.wyrm.engine.ext.fromJson
+import com.wyrm.engine.ext.open
 import com.wyrm.engine.ext.toJson
 import com.wyrm.engine.graphics.scene.Scene
 import com.wyrm.engine.managers.ProjectManager
@@ -35,6 +37,7 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    nativeInit(this)
     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
     project = requireNotNull(ProjectManager.instance.openedProject) { "No opened project" }
 
@@ -61,10 +64,19 @@ class EditorActivity : BaseActivity<ActivityEditorBinding>(ActivityEditorBinding
 
   }
 
+  private fun closeEditor() {
+    runOnUiThread {
+      open(ProjectsActivity::class.java)
+      finish()
+    }
+  }
+
   override fun onDestroy() {
     super.onDestroy()
     ProjectManager.instance.closeProject()
     ImGuiRenderer.destroy()
     Core.getInstance().destroy()
   }
+
+  private external fun nativeInit(activity: EditorActivity)
 }

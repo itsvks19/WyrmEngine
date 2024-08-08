@@ -7,9 +7,12 @@
 #include <GLES3/gl32.h>
 
 #include <cstring>
+#include <filesystem>
 #include <fstream>
+#include <iostream>
 
 #include "core/imgui/input/scroll_handler.h"
+#include "core/imgui/main_menu_bar.h"
 #include "ext/toast.h"
 #include "graphics/scene/scene.h"
 #include "imgui.h"
@@ -17,12 +20,16 @@
 #include "imgui_impl_opengl3.h"
 #include "imgui_internal.h"
 #include "imgui_scene_data.h"
+#include "managers/project_manager.h"
 #include "utils/util.h"
+#include "wyrm_application.h"
 
-Scene test_scene("TestScene");
+using namespace WyrmEngine;
 
 static bool g_Initialized = false;
 static std::string g_IniFilename;
+
+namespace fs = std::filesystem;
 
 void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
   if (g_Initialized) return;
@@ -32,7 +39,12 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
   this->width  = ANativeWindow_getWidth(nativeWindow);
   this->height = ANativeWindow_getHeight(nativeWindow);
 
-  std::ofstream test(WyrmEngine::Util::files_dir + "/test.wyrm");
+  static auto sceneFile = ProjectManager::getInstance()->openedProjectPath + "/Scenes/test.wscene";
+  fs::path path(sceneFile);
+
+  if (!fs::exists(path.parent_path())) {
+    fs::create_directories(path.parent_path());
+  }
 
   // Setup Dear ImGui context
   IMGUI_CHECKVERSION();
@@ -40,7 +52,7 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
   ImGuiIO &io = ImGui::GetIO();
 
   // Redirect loading/saving of .ini file to our location.
-  g_IniFilename  = WyrmEngine::Util::configs_dir + "/imgui.ini";
+  g_IniFilename  = Util::configs_dir + "/imgui.ini";
   io.IniFilename = g_IniFilename.c_str();
 
   // Setup Dear ImGui style
@@ -55,7 +67,7 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
   // Important: when calling AddFontFromMemoryTTF(), ownership of font_data is transferred by Dear ImGui by default (deleted is handled by Dear ImGui), unless we set FontDataOwnedByAtlas=false in ImFontConfig
   void *font_data;
   int font_data_size;
-  font_data_size = WyrmEngine::Util::ReadFromAsset("engine/fonts/Roboto-Medium.ttf", &font_data);
+  font_data_size = Util::ReadFromAsset("engine/fonts/Roboto-Medium.ttf", &font_data);
   ImFont *font;
   ImFontConfig fontConfig;
   if (fontConfig.SizePixels <= 0.0f) fontConfig.SizePixels = 23.0f;
@@ -86,6 +98,7 @@ void ImGuiAndroidHelper::init(ANativeWindow *nativeWindow) {
 
   g_Initialized = true;
 }
+
 void ImGuiAndroidHelper::mainLoop(JNIEnv *env) {
   ImGuiIO &io = ImGui::GetIO();
 
@@ -102,51 +115,44 @@ void ImGuiAndroidHelper::mainLoop(JNIEnv *env) {
   }
   WantTextInputLast = io.WantTextInput;
 
+  static auto sceneFile = ProjectManager::getInstance()->openedProjectPath + "/Scenes/test.wscene";
+  static bool scene_f   = false;
+  fs::path path(sceneFile);
+
+  std::ofstream testScene(sceneFile, std::ios::binary);
+  std::ifstream file(sceneFile, std::ios::binary);
+
+  if (!testScene.is_open()) {
+    // Toast::Show(WyrmApplication::GetGlThreadEnv(), "error");
+    printf("error");
+  }
+  static Scene scene("TestScene");
+  if (fs::exists(path)) {
+    file.read(reinterpret_cast<char *>(&scene), sizeof(scene));
+  }
+  testScene.write(reinterpret_cast<const char *>(&scene), sizeof(scene));
+
   // Start the Dear ImGui frame
   ImGui_ImplOpenGL3_NewFrame();
   ImGui_ImplAndroid_NewFrame();
   ImGui::NewFrame();
 
   //// MAIN MENU
-  if (ImGui::BeginMainMenuBar()) {
-    if (ImGui::BeginMenu("File")) {
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu("Edit")) {
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu("View")) {
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu("Scene")) {
-      if (ImGui::MenuItem("Light Settings")) { show_light_settings = true; }
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu("Code")) {
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu("Build")) {
-      ImGui::EndMenu();
-    }
-    if (ImGui::BeginMenu("Help")) {
-      ImGui::EndMenu();
-    }
-    ImGui::SameLine(ImGui::GetWindowWidth() - 220);
-    ImGui::Text("%.2f FPS (%.2f ms)", io.Framerate, 1000.0f / io.Framerate);
-    ImGui::EndMainMenuBar();
-  }
-
+  WyrmEngine::CreateMainMenu();
+  scene.name = "Hello";
   ////
 
   //// MAIN MENU FUNCTIONS
-  if (show_light_settings) {
-    ImGui::Begin("Light Settings", &show_light_settings);
-    ImGui::ColorEdit3("Space color", (float *) &test_scene.getLightSettings()->space_color);
-    ImGui::ColorEdit3("Ambient color", (float *) &test_scene.getLightSettings()->ambient_color);
+  if (SceneMenuData::getInstance()->ShowLightSettings) {
+    ImGui::Begin("Light Settings", &SceneMenuData::getInstance()->ShowLightSettings);
+    ImGui::ColorEdit3("Space color", (float *) &scene.getLightSettings()->space_color);
+    ImGui::ColorEdit3("Ambient color", (float *) &scene.getLightSettings()->ambient_color);
 
     if (ImGui::Button("Show Toast")) {
       Toast::Show(env, "Hello");
     }
+    testScene.write(reinterpret_cast<const char *>(&scene), sizeof(scene));
+    testScene.close();
     ImGui::End();
   }
   ////
@@ -158,10 +164,12 @@ void ImGuiAndroidHelper::mainLoop(JNIEnv *env) {
 
   // Rendering
   ImGui::Render();
-  glViewport(0, 0, (int) io.DisplaySize.x, (int) io.DisplaySize.y);
-  auto clear_color = test_scene.getLightSettings()->space_color;
-  glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-  glClear(GL_COLOR_BUFFER_BIT);
+  {
+    glViewport(0, 0, (int) io.DisplaySize.x, (int) io.DisplaySize.y);
+    auto clear_color = scene.getLightSettings()->space_color;
+    glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
+    glClear(GL_COLOR_BUFFER_BIT);
+  }
   ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 void ImGuiAndroidHelper::surfaceChange(int width, int height) {

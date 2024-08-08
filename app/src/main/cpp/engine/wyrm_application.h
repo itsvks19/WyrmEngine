@@ -7,11 +7,19 @@
 
 #include <jni.h>
 
+struct EditorActivity {
+  JNIEnv* env;
+  jobject obj;
+
+  EditorActivity(JNIEnv* env, jobject activity);
+};
+
 class WyrmApplication {
 private:
   static JNIEnv* env;
   static JNIEnv* glThreadEnv;
   static jobject wyrmSurface;
+  static EditorActivity* editorActivity;
 
 public:
   static void SetEnv(JNIEnv* env);
@@ -20,6 +28,8 @@ public:
   static JNIEnv* GetGlThreadEnv();
   static void SetWyrmSurface(jobject surface);
   static jobject& GetWyrmSurface();
+  static void SetEditorActivity(EditorActivity* activity);
+  static EditorActivity* GetEditorActivity();
 };
 
 

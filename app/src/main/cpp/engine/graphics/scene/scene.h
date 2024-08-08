@@ -12,15 +12,12 @@
 
 class Scene {
 private:
-  std::string name;
   LightSettings lightSettings;
 
 public:
-  explicit Scene(std::string name, LightSettings* lightSettings = new LightSettings());
+  std::string name;
 
-  std::string getName() {
-    return this->name;
-  };
+  explicit Scene(std::string name, LightSettings* lightSettings = new LightSettings());
 
   LightSettings* getLightSettings() {
     return &this->lightSettings;

@@ -44,20 +44,30 @@ class ProjectManager {
     }
   }
 
+  val projects: List<Project>
+    get() = File(Constants.PROJECTS_PATH).listFiles()?.map { Project(it) } ?: listOf()
+
   var openedProject: Project? = null
+    private set
+
+  var openedProjectPath: String = ""
+    get() = openedProject?.path ?: ""
+    private set
 
   fun openProject(project: Project) {
     openedProject = project
+    nativeOpenProject(openedProject!!.path)
   }
 
   fun closeProject() {
     openedProject = null
+    nativeCloseProject()
   }
 
   fun deleteProject(project: Project): Boolean {
     return FileUtils.delete(project.file)
   }
 
-  val projects: List<Project>
-    get() = File(Constants.PROJECTS_PATH).listFiles()?.map { Project(it) } ?: listOf()
+  private external fun nativeOpenProject(path: String)
+  private external fun nativeCloseProject()
 }
